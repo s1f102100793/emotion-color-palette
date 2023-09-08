@@ -1,56 +1,40 @@
-import type { TaskModel } from 'commonTypesWithClient/models';
-import type { ChangeEvent, FormEvent } from 'react';
-import { useEffect, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { apiClient } from 'src/utils/apiClient';
-import { returnNull } from 'src/utils/returnNull';
 import styles from './index.module.css';
 
 const Home = () => {
-  // const [user] = useAtom(userAtom);
-  const [tasks, setTasks] = useState<TaskModel[]>();
-  const [label, setLabel] = useState('');
-  const inputLabel = (e: ChangeEvent<HTMLInputElement>) => {
-    setLabel(e.target.value);
-  };
-  const fetchTasks = async () => {
-    const tasks = await apiClient.tasks.$get().catch(returnNull);
+  const [inputValue, setInputValue] = useState('');
 
-    if (tasks !== null) setTasks(tasks);
-  };
-  const createTask = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!label) return;
-
-    await apiClient.tasks.post({ body: { label } });
-    setLabel('');
-    await fetchTasks();
-  };
-  const toggleDone = async (task: TaskModel) => {
-    await apiClient.tasks._taskId(task.id).patch({ body: { done: !task.done } });
-    await fetchTasks();
-  };
-  const deleteTask = async (task: TaskModel) => {
-    await apiClient.tasks._taskId(task.id).delete();
-    await fetchTasks();
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  // if (!tasks || !user) return <Loading visible />;
+  const handleSubmit = () => {
+    const res = apiClient.color.$post({ body: { text: inputValue } });
+    console.log(res);
+  };
 
   return (
     <>
-      {/* <BasicHeader user={user} /> */}
-      <div className={styles.title} style={{ marginTop: '160px' }}>
-        Welcome to frourio!
+      <Helmet>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+      </Helmet>
+      <div className={styles.container}>
+        <h1 className={styles.title}>感情カラーパレット</h1>
+        <p className={styles.description}>あなたの感情を色で表現しよう。</p>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder="感情を表現する文を入力..."
+        />
+        <button onClick={handleSubmit}>送信</button>
       </div>
-
-      <form style={{ textAlign: 'center', marginTop: '80px' }} onSubmit={createTask}>
-        <input value={label} type="text" onChange={inputLabel} />
-        <input type="submit" value="ADD" />
-      </form>
     </>
   );
 };
