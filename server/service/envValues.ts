@@ -13,6 +13,7 @@ const S3_BUCKET = process.env.S3_BUCKET ?? '';
 const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY ?? '';
 const S3_SECRET_KEY = process.env.S3_SECRET_KEY ?? '';
 const S3_REGION = process.env.S3_REGION ?? '';
+const OPENAIAPI = process.env.OPENAI_API_KEY ?? '';
 
 export {
   API_BASE_PATH,
@@ -20,6 +21,7 @@ export {
   CORS_ORIGIN,
   FIREBASE_AUTH_EMULATOR_HOST,
   FIREBASE_SERVER_KEY,
+  OPENAIAPI,
   PORT,
   S3_ACCESS_KEY,
   S3_BUCKET,
