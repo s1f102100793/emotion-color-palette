@@ -11,8 +11,9 @@ const Home = () => {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = () => {
-    const res = apiClient.color.$post({ body: { text: inputValue } });
+  const handleSubmit = async () => {
+    console.log(inputValue);
+    const res = await apiClient.color.$post({ body: { text: inputValue, number: 5 } });
     console.log(res);
   };
 

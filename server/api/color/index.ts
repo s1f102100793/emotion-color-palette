@@ -6,6 +6,6 @@ export type Methods = DefineMethods<{
   };
   post: {
     reqBody: { text: string; number: number };
-    resBody: { [x: `color${number}`]: any };
+    resBody: { [x: `color${number}`]: any } | undefined;
   };
 }>;
