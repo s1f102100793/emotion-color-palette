@@ -13,6 +13,7 @@ const Home = () => {
   };
 
   const handleSubmit = async () => {
+    setColors([]);
     console.log(inputValue);
     const res = await apiClient.color.$post({ body: { text: inputValue, number: 5 } });
     console.log(res);
