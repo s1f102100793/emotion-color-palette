@@ -30,8 +30,6 @@ export const makeColor = async (text: string, number: number) => {
       question: `${text}から連想される${number}色のカラーパレットを16進数のカラーコードで答えてください。ex.#0A0A0A`,
     });
 
-    // const tools = [new SerpAPI(), new Calculator()];
-
     const llm = new OpenAI({
       openAIApiKey: OPENAIAPI,
       temperature: 0.9,
