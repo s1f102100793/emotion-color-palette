@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { gaPageview } from 'src/utils/gtag';
 import '../styles/globals.css';
-import { AuthLoader } from './@components/AuthLoader';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
@@ -26,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <SafeHydrate>
         <Component {...pageProps} />
       </SafeHydrate>
-      <AuthLoader />
+      {/* <AuthLoader /> */}
     </>
   );
 }
