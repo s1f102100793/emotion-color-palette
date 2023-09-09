@@ -3,7 +3,7 @@ import type { ColorModel } from '../../commonTypesWithClient/models';
 
 export type Methods = DefineMethods<{
   get: {
-    reqBody: { type: string; list: string[] | number };
+    reqBody: { type: string; list: number[] | number };
     resBody: ColorModel[] | undefined;
   };
   post: {

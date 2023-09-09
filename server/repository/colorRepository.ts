@@ -1,9 +1,7 @@
 import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
-export const getItems = async (type: string, list: string[] | number) => {
-  console.log(type, list);
-  console.log('aaaa');
+export const getItems = async (type: string, list: number[] | number) => {
   try {
     switch (type) {
       case 'number':
@@ -13,7 +11,7 @@ export const getItems = async (type: string, list: string[] | number) => {
         break;
       case 'color':
         if (Array.isArray(list)) {
-          return await getItemsFromColor(list);
+          return await getItemsFromColor(list[0], list[1]);
         }
         break;
     }
@@ -21,12 +19,15 @@ export const getItems = async (type: string, list: string[] | number) => {
     console.log(e);
   }
 };
-const decimalToHex = (decimal: number): string => {
+
+export const decimalToHex = (decimal: number): string => {
   const r = (decimal >> 16) & 255;
   const g = (decimal >> 8) & 255;
   const b = decimal & 255;
 
-  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b
+    .toString(16)
+    .padStart(2, '0')}`;
 };
 
 export const getItemsFromNumber = async (paletteSize: number) => {
@@ -37,29 +38,21 @@ export const getItemsFromNumber = async (paletteSize: number) => {
       select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
     });
 
-    prismaColor.forEach((item) => {
-      item.color = item.color.map(decimalToHex.toString);
-    });
-
     return prismaColor.map(toColorModel);
   } catch (e) {
     console.log(e);
   }
 };
 
-export const getItemsFromColor = async (color: string[]) => {
-  const prismaColor = await prismaClient.color.findMany({
-    where: {
-      color: {
-        hasSome: color,
-      },
-    },
+export const getItemsFromColor = async (startRange: number, endRange: number) => {
+  console.log(startRange, endRange);
+  const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
   });
 
-  prismaColor.forEach((item) => {
-    item.color = item.color.map(decimalToHex.toString);
-  });
+  const filteredColors = allColors.filter((item) =>
+    item.color.some((value) => value >= startRange && value <= endRange)
+  );
 
-  return prismaColor.map(toColorModel);
+  return filteredColors.map(toColorModel);
 };

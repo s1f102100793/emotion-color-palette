@@ -1,4 +1,5 @@
 import type { ColorModel } from '$/commonTypesWithClient/models';
+import { decimalToHex } from '$/repository/colorRepository';
 import { OPENAIAPI } from '$/service/envValues';
 import { prismaClient } from '$/service/prismaClient';
 import type { Color } from '@prisma/client';
@@ -45,7 +46,7 @@ export const makeColor = async (txet: string, number: number, id: number | undef
 
     let colorsArray: string[] = [];
 
-    const extractColors = (inputObj: { [key: string]: any }) => {
+    const extractColors = (inputObj: { [key: string]: string }): string[] => {
       const colors: string[] = [];
       for (const key in inputObj) {
         if (
@@ -74,16 +75,25 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   createdAt: prismaColor.createdAt,
   txet: prismaColor.txet,
   paletteSize: prismaColor.paletteSize,
-  color: prismaColor.color,
+  color: prismaColor.color.map(decimalToHex),
   like: prismaColor.like,
 });
 
-const hexToDecimal = (hex: string): string => {
+const hexToDecimal = (hex: string): number => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
 
-  return ((r << 16) + (g << 8) + b).toString();
+  // 各色の値を3桁の10進数の文字列に変換
+  const rStr = r.toString().padStart(3, '0');
+  const gStr = g.toString().padStart(3, '0');
+  const bStr = b.toString().padStart(3, '0');
+
+  // 3桁の10進数の文字列を結合
+  const decimalValueStr = rStr + gStr + bStr;
+
+  // 9桁の10進数の数値に変換
+  return parseInt(decimalValueStr);
 };
 
 export const createColordb = async (
@@ -95,9 +105,9 @@ export const createColordb = async (
 ) => {
   console.log('aaa');
 
-  const decimalColors = color.map(hexToDecimal);
-
   let prismaColor;
+
+  const decimalColors = color.map(hexToDecimal);
 
   if (id !== undefined && id !== null) {
     prismaColor = await prismaClient.color.update({
