@@ -13,3 +13,12 @@ model Task {
   done      Boolean
   createdAt DateTime
 }
+
+model Color {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  name        String
+  paletteSize Int
+  color       String[]
+  like        Int
+}

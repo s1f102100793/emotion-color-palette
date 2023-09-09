@@ -13,3 +13,12 @@ export type TaskModel = {
   done: boolean;
   created: number;
 };
+
+export type ColorModel = {
+  id: number;
+  createdAt: Date;
+  name: string;
+  paletteSize: number;
+  color: string[];
+  like: number;
+};

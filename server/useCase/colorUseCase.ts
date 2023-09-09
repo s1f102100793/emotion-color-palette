@@ -1,4 +1,7 @@
+import type { ColorModel } from '$/commonTypesWithClient/models';
 import { OPENAIAPI } from '$/service/envValues';
+import { prismaClient } from '$/service/prismaClient';
+import type { Color } from '@prisma/client';
 import { OpenAI, PromptTemplate } from 'langchain';
 import { StructuredOutputParser } from 'langchain/output_parsers';
 import { z } from 'zod';
@@ -42,4 +45,35 @@ export const makeColor = async (text: string, number: number) => {
   } catch (e) {
     console.log(e);
   }
+};
+
+export const toColorModel = (prismaColor: Color): ColorModel => ({
+  id: prismaColor.id,
+  createdAt: prismaColor.createdAt,
+  name: prismaColor.name,
+  paletteSize: prismaColor.paletteSize,
+  color: prismaColor.color,
+  like: prismaColor.like,
+});
+
+export const upsertColor = async (
+  id: ColorModel['id'],
+  name: ColorModel['name'],
+  paletteSize: ColorModel['paletteSize'],
+  color: ColorModel['color'],
+  like: ColorModel['like']
+) => {
+  const prismaColor = await prismaClient.color.upsert({
+    where: { id },
+    update: { like },
+    create: {
+      id,
+      createdAt: new Date(),
+      name,
+      paletteSize,
+      color,
+      like,
+    },
+  });
+  return toColorModel(prismaColor);
 };
