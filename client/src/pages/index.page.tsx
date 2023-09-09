@@ -57,9 +57,10 @@ const Home = () => {
         </select>
         <button onClick={handleSubmit}>送信</button>
         <div className={styles.colors}>
-          {' '}
           {colors.map((color, index) => (
-            <div key={index} className={styles.colorBox} style={{ backgroundColor: color }} />
+            <div key={index} className={styles.colorBox} style={{ backgroundColor: color }}>
+              <span className={styles.colorCode}>{color}</span>
+            </div>
           ))}
         </div>
       </div>
