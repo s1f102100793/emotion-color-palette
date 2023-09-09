@@ -1,5 +1,5 @@
-import type { ColorModel } from '../../commonTypesWithClient/models';
 import type { DefineMethods } from 'aspida';
+import type { ColorModel } from '../../commonTypesWithClient/models';
 
 export type Methods = DefineMethods<{
   get: {
