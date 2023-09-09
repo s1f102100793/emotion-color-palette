@@ -3,6 +3,7 @@ import { toColorModel } from '$/useCase/colorUseCase';
 
 export const getItems = async (type: string, list: string[] | number) => {
   console.log(type, list);
+  console.log('aaaa');
   try {
     switch (type) {
       case 'number':
