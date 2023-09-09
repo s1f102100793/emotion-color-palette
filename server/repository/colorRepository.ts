@@ -21,6 +21,13 @@ export const getItems = async (type: string, list: string[] | number) => {
     console.log(e);
   }
 };
+const decimalToHex = (decimal: number): string => {
+  const r = (decimal >> 16) & 255;
+  const g = (decimal >> 8) & 255;
+  const b = decimal & 255;
+
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
+};
 
 export const getItemsFromNumber = async (paletteSize: number) => {
   try {
@@ -29,6 +36,11 @@ export const getItemsFromNumber = async (paletteSize: number) => {
       where: { paletteSize },
       select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
     });
+
+    prismaColor.forEach((item) => {
+      item.color = item.color.map(decimalToHex.toString);
+    });
+
     return prismaColor.map(toColorModel);
   } catch (e) {
     console.log(e);
@@ -44,5 +56,10 @@ export const getItemsFromColor = async (color: string[]) => {
     },
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
   });
+
+  prismaColor.forEach((item) => {
+    item.color = item.color.map(decimalToHex.toString);
+  });
+
   return prismaColor.map(toColorModel);
 };

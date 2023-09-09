@@ -78,6 +78,14 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   like: prismaColor.like,
 });
 
+const hexToDecimal = (hex: string): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return ((r << 16) + (g << 8) + b).toString();
+};
+
 export const createColordb = async (
   id: ColorModel['id'] | undefined,
   txet: ColorModel['txet'],
@@ -86,6 +94,8 @@ export const createColordb = async (
   like: ColorModel['like']
 ) => {
   console.log('aaa');
+
+  const decimalColors = color.map(hexToDecimal);
 
   let prismaColor;
 
@@ -96,7 +106,7 @@ export const createColordb = async (
         like,
         txet,
         paletteSize,
-        color,
+        color: decimalColors,
       },
     });
   } else {
@@ -104,7 +114,7 @@ export const createColordb = async (
       data: {
         txet,
         paletteSize,
-        color,
+        color: decimalColors,
         like,
       },
     });
