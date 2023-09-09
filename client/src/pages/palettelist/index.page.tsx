@@ -20,9 +20,11 @@ const PaletteListPage = () => {
     グリーン: [hexToDecimal('#008000'), hexToDecimal('#00FF00')],
   };
 
+  const numberlist: number[] = [4];
+
   const fetchPalettes = async (colorRanges: number[][]) => {
     const fetchPalettes = await apiClient.item.$post({
-      body: { type: 'color', list: colorRanges },
+      body: { type: 'with', numberlist, colorlist: colorRanges },
     });
     console.log(fetchPalettes);
     return fetchPalettes;
