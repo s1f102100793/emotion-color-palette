@@ -18,7 +18,7 @@ model Color {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   name        String
-  PaletteSize Int
+  paletteSize Int
   color       String
   iine        Int
 }
