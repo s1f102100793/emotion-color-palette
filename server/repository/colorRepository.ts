@@ -1,17 +1,31 @@
 import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
-export const getItems = async (type: string, list: number[] | number) => {
+export const getItems = async (type: string, numberlist: number[], colorlist: number[][]) => {
   try {
     switch (type) {
       case 'number':
-        if (typeof list === 'number') {
-          return await getItemsFromNumber(list);
+        if (Array.isArray(numberlist)) {
+          return await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
         }
         break;
       case 'color':
-        if (Array.isArray(list)) {
-          return await getItemsFromColor(list[0], list[1]);
+        if (Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
+          return await getItemsFromColor(colorlist as number[][]);
+        }
+        break;
+      case 'with':
+        if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
+          const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+
+          const colorItems = await getItemsFromColor(colorlist as number[][]);
+
+          const flattenedNumberItems = numberItems.flatMap((item) => item);
+
+          return flattenedNumberItems.filter(
+            (numberItem) =>
+              numberItem && colorItems.some((colorItem) => colorItem.id === numberItem.id)
+          );
         }
         break;
     }
@@ -44,14 +58,15 @@ export const getItemsFromNumber = async (paletteSize: number) => {
   }
 };
 
-export const getItemsFromColor = async (startRange: number, endRange: number) => {
-  console.log(startRange, endRange);
+export const getItemsFromColor = async (ranges: number[][]) => {
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
   });
 
   const filteredColors = allColors.filter((item) =>
-    item.color.some((value) => value >= startRange && value <= endRange)
+    item.color.some((colorValue) =>
+      ranges.some(([startRange, endRange]) => colorValue >= startRange && colorValue <= endRange)
+    )
   );
 
   return filteredColors.map(toColorModel);

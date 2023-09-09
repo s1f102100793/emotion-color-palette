@@ -5,7 +5,7 @@ import styles from './palettelist.module.css';
 type ColorKey = 'ブルー' | 'レッド' | 'グリーン';
 
 const PaletteListPage = () => {
-  const [selectedColor, setSelectedColor] = useState<ColorKey>('ブルー');
+  const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
 
   const hexToDecimal = (hex: string): number => {
     const r = parseInt(hex.slice(1, 3), 16).toString().padStart(3, '0');
@@ -14,41 +14,45 @@ const PaletteListPage = () => {
     return parseInt(r + g + b);
   };
 
-  const BLUE_START = hexToDecimal('#0000FF');
-  const BLUE_END = hexToDecimal('#87CEFA');
-
-  const RED_START = hexToDecimal('#FF0000');
-  const RED_END = hexToDecimal('#FF4500');
-
-  const GREEN_START = hexToDecimal('#008000');
-  const GREEN_END = hexToDecimal('#00FF00');
-
-  const COLOR_RANGES: Record<ColorKey, number[]> = {
-    ブルー: [BLUE_START, BLUE_END],
-    レッド: [RED_START, RED_END],
-    グリーン: [GREEN_START, GREEN_END],
+  const colorRanges = {
+    ブルー: [hexToDecimal('#0000FF'), hexToDecimal('#87CEFA')],
+    レッド: [hexToDecimal('#FF0000'), hexToDecimal('#FF4500')],
+    グリーン: [hexToDecimal('#008000'), hexToDecimal('#00FF00')],
   };
 
-  const fetchPalettes = async (colorRange: number[]) => {
-    const fetchPalettes = await apiClient.item.$post({ body: { type: 'color', list: colorRange } });
+  const numberlist: number[] = [4];
+
+  const fetchPalettes = async (colorRanges: number[][]) => {
+    const fetchPalettes = await apiClient.item.$post({
+      body: { type: 'with', numberlist, colorlist: colorRanges },
+    });
     console.log(fetchPalettes);
     return fetchPalettes;
   };
 
   const handleFetch = () => {
-    const colorRange = COLOR_RANGES[selectedColor];
-    fetchPalettes(colorRange);
+    const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
+    fetchPalettes(rangesToSend);
+  };
+
+  const handleColorChange = (color: ColorKey) => {
+    setSelectedColors((prev) =>
+      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
+    );
   };
 
   return (
     <div className={styles.container}>
-      <select value={selectedColor} onChange={(e) => setSelectedColor(e.target.value as ColorKey)}>
-        {Object.keys(COLOR_RANGES).map((color) => (
-          <option key={color} value={color}>
-            {color}
-          </option>
-        ))}
-      </select>
+      {Object.keys(colorRanges).map((color) => (
+        <div key={color}>
+          <input
+            type="checkbox"
+            checked={selectedColors.includes(color as ColorKey)}
+            onChange={() => handleColorChange(color as ColorKey)}
+          />
+          <label>{color}</label>
+        </div>
+      ))}
       <button onClick={handleFetch}>パレットを取得</button>
     </div>
   );
