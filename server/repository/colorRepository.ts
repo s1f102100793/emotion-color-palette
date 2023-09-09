@@ -1,7 +1,7 @@
 import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
-export const getItems = async (type: string, list: number[] | number) => {
+export const getItems = async (type: string, list: number[][] | number) => {
   try {
     switch (type) {
       case 'number':
@@ -10,8 +10,8 @@ export const getItems = async (type: string, list: number[] | number) => {
         }
         break;
       case 'color':
-        if (Array.isArray(list)) {
-          return await getItemsFromColor(list[0], list[1]);
+        if (Array.isArray(list) && Array.isArray(list[0])) {
+          return await getItemsFromColor(list as number[][]);
         }
         break;
     }
@@ -44,14 +44,15 @@ export const getItemsFromNumber = async (paletteSize: number) => {
   }
 };
 
-export const getItemsFromColor = async (startRange: number, endRange: number) => {
-  console.log(startRange, endRange);
+export const getItemsFromColor = async (ranges: number[][]) => {
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
   });
 
   const filteredColors = allColors.filter((item) =>
-    item.color.some((value) => value >= startRange && value <= endRange)
+    item.color.some((colorValue) =>
+      ranges.some(([startRange, endRange]) => colorValue >= startRange && colorValue <= endRange)
+    )
   );
 
   return filteredColors.map(toColorModel);
