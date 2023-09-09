@@ -3,10 +3,20 @@ import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
 
 type ColorKey = 'ブルー' | 'レッド' | 'グリーン';
+
+const BLUE_START = (0 << 16) + (0 << 8) + 255; // #0000FF
+const BLUE_END = (135 << 16) + (206 << 8) + 250; // #87CEFA
+
+const RED_START = (255 << 16) + (0 << 8) + 0; // #FF0000
+const RED_END = (255 << 16) + (69 << 8) + 0; // #FF4500
+
+const GREEN_START = (0 << 16) + (128 << 8) + 0; // #008000
+const GREEN_END = (0 << 16) + (255 << 8) + 0; // #00FF00
+
 const COLOR_RANGES: Record<ColorKey, string[]> = {
-  ブルー: ['#0000FF', '#87CEFA'],
-  レッド: ['#FF0000', '#FF4500'],
-  グリーン: ['#008000', '#00FF00'],
+  ブルー: [BLUE_START.toString(), BLUE_END.toString()],
+  レッド: [RED_START.toString(), RED_END.toString()],
+  グリーン: [GREEN_START.toString(), GREEN_END.toString()],
 };
 
 const PaletteListPage = () => {

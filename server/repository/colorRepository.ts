@@ -2,8 +2,6 @@ import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
 export const getItems = async (type: string, list: string[] | number) => {
-  console.log(type, list);
-  console.log('aaaa');
   try {
     switch (type) {
       case 'number':
@@ -48,18 +46,43 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 };
 
 export const getItemsFromColor = async (color: string[]) => {
-  const prismaColor = await prismaClient.color.findMany({
-    where: {
-      color: {
-        hasSome: color,
+  console.log(color);
+  interface ColorData {
+    id: number;
+    createdAt: Date;
+    txet: string;
+    paletteSize: number;
+    color: string[];
+    like: number;
+  }
+
+  let results: ColorData[] = [];
+
+  if (color.length !== 2) {
+    throw new Error('Expected an array of 2 numbers for the color range.');
+  }
+
+  const startRange = parseInt(color[0], 10);
+  const endRange = parseInt(color[1], 10);
+
+  for (let i = startRange; i <= endRange; i++) {
+    const prismaColor = (await prismaClient.color.findMany({
+      where: {
+        color: {
+          has: i.toString(),
+        },
       },
-    },
-    select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
-  });
+      select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
+    })) as ColorData[];
 
-  prismaColor.forEach((item) => {
-    item.color = item.color.map(decimalToHex.toString);
-  });
+    prismaColor.forEach((item: ColorData) => {
+      item.color = item.color.map((val: string) => decimalToHex(parseInt(val, 10)));
+    });
 
-  return prismaColor.map(toColorModel);
+    results = [...results, ...prismaColor];
+    console.log(results);
+  }
+  console.log(results);
+
+  return results.map(toColorModel);
 };
