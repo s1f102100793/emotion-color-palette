@@ -51,14 +51,25 @@ const Home = () => {
           value={inputValue}
           onChange={handleInputChange}
           placeholder="感情を表現する文を入力..."
+          className={styles.textInput}
         />
-        <label htmlFor="colorCount">色の数を選択:</label>
-        <select id="colorCount" value={selectedValue} onChange={handleChange}>
+        <label className={styles.label} htmlFor="colorCount">
+          色の数を選択:
+        </label>
+        <select
+          className={styles.selectBox}
+          id="colorCount"
+          value={selectedValue}
+          onChange={handleChange}
+        >
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
         </select>
-        <button onClick={handleSubmit}>送信</button>
+
+        <button onClick={handleSubmit} className={styles.submitButton}>
+          送信
+        </button>
         <div className={styles.colors}>
           {colors.map((color, index) => (
             <div key={index} className={styles.colorBox} style={{ backgroundColor: color }}>
