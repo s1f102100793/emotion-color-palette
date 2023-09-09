@@ -1,5 +1,4 @@
 import { makeColor } from '$/useCase/colorUseCase';
-import { getItems } from '../../repository/colorRepository';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
