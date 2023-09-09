@@ -45,7 +45,7 @@ export const makeColor = async (txet: string, number: number, id: number | undef
 
     let colorsArray: string[] = [];
 
-    const extractColors = (inputObj: { [key: string]: any }) => {
+    const extractColors = (inputObj: { [key: string]: string }): string[] => {
       const colors: string[] = [];
       for (const key in inputObj) {
         if (
@@ -78,34 +78,26 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   like: prismaColor.like,
 });
 
-const formatToThreeDigits = (num: number): string => {
-  return num.toString().padStart(3, '0');
-};
-
-const hexToDecimal = (hex: string): string => {
+const hexToDecimal = (hex: string): number => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
 
-  const formattedR = formatToThreeDigits(r);
-  const formattedG = formatToThreeDigits(g);
-  const formattedB = formatToThreeDigits(b);
-
-  return formattedR + formattedG + formattedB;
+  return (r << 16) + (g << 8) + b;
 };
 
 export const createColordb = async (
   id: ColorModel['id'] | undefined,
   txet: ColorModel['txet'],
   paletteSize: ColorModel['paletteSize'],
-  color: ColorModel['color'],
+  color: string[],
   like: ColorModel['like']
 ) => {
   console.log('aaa');
 
-  const decimalColors = color.map(hexToDecimal);
-
   let prismaColor;
+
+  const decimalColors = color.map(hexToDecimal);
 
   if (id !== undefined && id !== null) {
     prismaColor = await prismaClient.color.update({

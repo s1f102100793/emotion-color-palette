@@ -45,19 +45,15 @@ export const getItemsFromNumber = async (paletteSize: number) => {
   }
 };
 
-export const getItemsFromColor = async (color: string[]) => {
-  console.log(color);
+export const getItemsFromColorRange = async (startRange: string, endRange: string) => {
   const prismaColor = await prismaClient.color.findMany({
     where: {
       color: {
-        hasSome: color,
+        gte: startRange,
+        lte: endRange,
       },
     },
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
-  });
-
-  prismaColor.forEach((item) => {
-    item.color = item.color.map(decimalToHex.toString);
   });
 
   return prismaColor.map(toColorModel);

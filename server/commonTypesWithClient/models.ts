@@ -19,6 +19,6 @@ export type ColorModel = {
   createdAt: Date;
   txet: string;
   paletteSize: number;
-  color: string[];
+  color: number[];
   like: number;
 };
