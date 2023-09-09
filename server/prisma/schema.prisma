@@ -17,7 +17,7 @@ model Task {
 model Color {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
-  name        String
+  txet        String
   paletteSize Int
   color       String[]
   like        Int

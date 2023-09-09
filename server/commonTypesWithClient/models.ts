@@ -17,7 +17,7 @@ export type TaskModel = {
 export type ColorModel = {
   id: number;
   createdAt: Date;
-  name: string;
+  txet: string;
   paletteSize: number;
   color: string[];
   like: number;
