@@ -15,10 +15,10 @@ export type TaskModel = {
 };
 
 export type ColorModel = {
-  id: string;
+  id: number;
   createdAt: Date;
   name: string;
   paletteSize: number;
-  color: string;
-  iine: number;
+  color: string[];
+  like: number;
 };

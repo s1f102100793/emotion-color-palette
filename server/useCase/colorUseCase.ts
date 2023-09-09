@@ -53,7 +53,7 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   name: prismaColor.name,
   paletteSize: prismaColor.paletteSize,
   color: prismaColor.color,
-  iine: prismaColor.iine,
+  like: prismaColor.like,
 });
 
 export const upsertColor = async (
@@ -61,18 +61,18 @@ export const upsertColor = async (
   name: ColorModel['name'],
   paletteSize: ColorModel['paletteSize'],
   color: ColorModel['color'],
-  iine: ColorModel['iine']
+  like: ColorModel['like']
 ) => {
   const prismaColor = await prismaClient.color.upsert({
     where: { id },
-    update: { iine },
+    update: { like },
     create: {
       id,
       createdAt: new Date(),
       name,
       paletteSize,
       color,
-      iine,
+      like,
     },
   });
   return toColorModel(prismaColor);

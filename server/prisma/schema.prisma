@@ -15,10 +15,10 @@ model Task {
 }
 
 model Color {
-  id          String   @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   name        String
   paletteSize Int
-  color       String
-  iine        Int
+  color       String[]
+  like        Int
 }
