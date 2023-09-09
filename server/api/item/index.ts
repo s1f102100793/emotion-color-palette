@@ -6,7 +6,7 @@ export type Methods = DefineMethods<{
     resBody: string;
   };
   post: {
-    reqBody: { type: string; list: string[] | number };
+    reqBody: { type: string; list: number[] | number };
     resBody: ColorModel[] | undefined;
   };
 }>;

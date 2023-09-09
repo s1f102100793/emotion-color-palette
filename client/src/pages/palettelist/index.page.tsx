@@ -13,16 +13,16 @@ const RED_END = (255 << 16) + (69 << 8) + 0; // #FF4500
 const GREEN_START = (0 << 16) + (128 << 8) + 0; // #008000
 const GREEN_END = (0 << 16) + (255 << 8) + 0; // #00FF00
 
-const COLOR_RANGES: Record<ColorKey, string[]> = {
-  ブルー: [BLUE_START.toString(), BLUE_END.toString()],
-  レッド: [RED_START.toString(), RED_END.toString()],
-  グリーン: [GREEN_START.toString(), GREEN_END.toString()],
+const COLOR_RANGES: Record<ColorKey, number[]> = {
+  ブルー: [BLUE_START, BLUE_END],
+  レッド: [RED_START, RED_END],
+  グリーン: [GREEN_START, GREEN_END],
 };
 
 const PaletteListPage = () => {
   const [selectedColor, setSelectedColor] = useState<ColorKey>('ブルー');
 
-  const fetchPalettes = async (colorRange: string[]) => {
+  const fetchPalettes = async (colorRange: number[]) => {
     const fetchPalettes = await apiClient.item.$post({ body: { type: 'color', list: colorRange } });
     console.log(fetchPalettes);
     return fetchPalettes;

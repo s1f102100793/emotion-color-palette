@@ -1,4 +1,5 @@
 import type { ColorModel } from '$/commonTypesWithClient/models';
+import { decimalToHex } from '$/repository/colorRepository';
 import { OPENAIAPI } from '$/service/envValues';
 import { prismaClient } from '$/service/prismaClient';
 import type { Color } from '@prisma/client';
@@ -74,7 +75,7 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   createdAt: prismaColor.createdAt,
   txet: prismaColor.txet,
   paletteSize: prismaColor.paletteSize,
-  color: prismaColor.color,
+  color: prismaColor.color.map(decimalToHex),
   like: prismaColor.like,
 });
 
@@ -92,7 +93,7 @@ export const createColordb = async (
   id: ColorModel['id'] | undefined,
   txet: ColorModel['txet'],
   paletteSize: ColorModel['paletteSize'],
-  color: string[],
+  color: ColorModel['color'],
   like: ColorModel['like']
 ) => {
   console.log('aaa');
