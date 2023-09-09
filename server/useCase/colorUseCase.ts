@@ -86,15 +86,29 @@ export const createColordb = async (
   like: ColorModel['like']
 ) => {
   console.log('aaa');
-  const prismaColor = await prismaClient.color.upsert({
-    where: { id },
-    update: { like },
-    create: {
-      txet,
-      paletteSize,
-      color,
-      like,
-    },
-  });
+
+  let prismaColor;
+
+  if (id !== undefined && id !== null) {
+    prismaColor = await prismaClient.color.update({
+      where: { id },
+      data: {
+        like,
+        txet,
+        paletteSize,
+        color,
+      },
+    });
+  } else {
+    prismaColor = await prismaClient.color.create({
+      data: {
+        txet,
+        paletteSize,
+        color,
+        like,
+      },
+    });
+  }
+
   return toColorModel(prismaColor);
 };
