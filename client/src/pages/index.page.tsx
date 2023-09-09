@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './index.module.css';
@@ -8,6 +8,24 @@ const Home = () => {
   const [inputValue, setInputValue] = useState('');
   const [colors, setColors] = useState<string[]>([]);
   const [selectedValue, setSelectedValue] = useState<number>(4);
+  const [loading, setLoading] = useState(false);
+
+  const loadingText = '作成中...';
+  const [chars, setChars] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (loading) {
+      const currentChars: string[] = [];
+      for (let i = 0; i < loadingText.length; i++) {
+        setTimeout(() => {
+          currentChars.push(loadingText[i]);
+          setChars([...currentChars]);
+        }, i * 100);
+      }
+    } else {
+      setChars([]);
+    }
+  }, [loading]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -21,14 +39,17 @@ const Home = () => {
 
   const handleSubmit = async () => {
     setColors([]);
+    setLoading(true);
     console.log(inputValue);
     const res = await apiClient.color.$post({ body: { text: inputValue, number: selectedValue } });
     console.log(res);
     if (res !== null && res !== undefined) {
       const colorsArray = Object.values(res);
       setColors(colorsArray);
+      setLoading(false);
     } else {
       console.error('API response is undefined.');
+      setLoading(false);
     }
   };
 
@@ -70,6 +91,19 @@ const Home = () => {
         <button onClick={handleSubmit} className={styles.submitButton}>
           送信
         </button>
+        {loading ? (
+          <div className={styles.loadingText}>
+            {chars.map((char, index) => (
+              <span
+                key={index}
+                style={{ animationDelay: `${index * 0.5}s` }}
+                className={styles.loadingChar}
+              >
+                {char}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <div className={styles.colors}>
           {colors.map((color, index) => (
             <div key={index} className={styles.colorBox} style={{ backgroundColor: color }}>
