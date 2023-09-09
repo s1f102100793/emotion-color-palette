@@ -47,42 +47,18 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 
 export const getItemsFromColor = async (color: string[]) => {
   console.log(color);
-  interface ColorData {
-    id: number;
-    createdAt: Date;
-    txet: string;
-    paletteSize: number;
-    color: string[];
-    like: number;
-  }
-
-  let results: ColorData[] = [];
-
-  if (color.length !== 2) {
-    throw new Error('Expected an array of 2 numbers for the color range.');
-  }
-
-  const startRange = parseInt(color[0], 10);
-  const endRange = parseInt(color[1], 10);
-
-  for (let i = startRange; i <= endRange; i++) {
-    const prismaColor = (await prismaClient.color.findMany({
-      where: {
-        color: {
-          has: i.toString(),
-        },
+  const prismaColor = await prismaClient.color.findMany({
+    where: {
+      color: {
+        hasSome: color,
       },
-      select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
-    })) as ColorData[];
+    },
+    select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
+  });
 
-    prismaColor.forEach((item: ColorData) => {
-      item.color = item.color.map((val: string) => decimalToHex(parseInt(val, 10)));
-    });
+  prismaColor.forEach((item) => {
+    item.color = item.color.map(decimalToHex.toString);
+  });
 
-    results = [...results, ...prismaColor];
-    console.log(results);
-  }
-  console.log(results);
-
-  return results.map(toColorModel);
+  return prismaColor.map(toColorModel);
 };

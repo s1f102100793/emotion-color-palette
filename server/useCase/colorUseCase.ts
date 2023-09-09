@@ -78,12 +78,20 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
   like: prismaColor.like,
 });
 
+const formatToThreeDigits = (num: number): string => {
+  return num.toString().padStart(3, '0');
+};
+
 const hexToDecimal = (hex: string): string => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
 
-  return ((r << 16) + (g << 8) + b).toString();
+  const formattedR = formatToThreeDigits(r);
+  const formattedG = formatToThreeDigits(g);
+  const formattedB = formatToThreeDigits(b);
+
+  return formattedR + formattedG + formattedB;
 };
 
 export const createColordb = async (
