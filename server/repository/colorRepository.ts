@@ -6,7 +6,9 @@ export const getItems = async (type: string, numberlist: number[], colorlist: nu
     switch (type) {
       case 'number':
         if (Array.isArray(numberlist)) {
-          return await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+          return (await Promise.all(numberlist.map((num) => getItemsFromNumber(num)))).flatMap(
+            (item) => item
+          );
         }
         break;
       case 'color':
@@ -24,13 +26,15 @@ export const getItems = async (type: string, numberlist: number[], colorlist: nu
 
           return flattenedNumberItems.filter(
             (numberItem) =>
-              numberItem && colorItems.some((colorItem) => colorItem.id === numberItem.id)
+              numberItem !== undefined &&
+              colorItems.some((colorItem) => colorItem.id === numberItem.id)
           );
         }
         break;
     }
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
 
@@ -55,6 +59,7 @@ export const getItemsFromNumber = async (paletteSize: number) => {
     return prismaColor.map(toColorModel);
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
 
