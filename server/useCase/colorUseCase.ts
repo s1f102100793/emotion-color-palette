@@ -27,18 +27,17 @@ export const makeColor = async (text: string, number: number) => {
     });
 
     const input = await prompt.format({
-      question: `${text}から連想される${number}色のカラーパレットを16進数のカラーコードで答えてください。ex.#0A0A0A`,
+      question: `${text}から連想される${number}色のカラーパレットを16進数のカラーコードで答えてください。JSONで他とはかぶらないユニークな原色ではないカラーコードだけを出力してください。ex.#0A0A0A`,
     });
-
-    // const tools = [new SerpAPI(), new Calculator()];
 
     const llm = new OpenAI({
       openAIApiKey: OPENAIAPI,
       temperature: 0.9,
+      modelName: 'gpt-4',
     });
 
     const res = await llm.call(input);
-
+    console.log(res);
     return await parser.parse(res);
   } catch (e) {
     console.log(e);
