@@ -10,9 +10,9 @@ type ColorProperties = {
   [key: `color${number}`]: z.ZodType<any, any>;
 };
 
-export const makeColor = async (text: string, number: number) => {
+export const makeColor = async (txet: string, number: number, id: number | undefined) => {
   try {
-    console.log(text);
+    console.log(txet);
     const properties: ColorProperties = {};
 
     for (let i = 0; i < number; i++) {
@@ -30,7 +30,7 @@ export const makeColor = async (text: string, number: number) => {
     });
 
     const input = await prompt.format({
-      question: `${text}から連想される${number}色のカラーパレットを16進数のカラーコードで答えてください。JSONで他とはかぶらないユニークな原色ではないカラーコードだけを出力してください。ex.#0A0A0A`,
+      question: `${txet}から連想される${number}色のカラーパレットを16進数のカラーコードで答えてください。JSONで他とはかぶらないユニークな原色ではないカラーコードだけを出力してください。ex.#0A0A0A`,
     });
 
     const llm = new OpenAI({
@@ -41,7 +41,29 @@ export const makeColor = async (text: string, number: number) => {
 
     const res = await llm.call(input);
     console.log(res);
-    return await parser.parse(res);
+    const anser = await parser.parse(res);
+
+    let colorsArray: string[] = [];
+
+    const extractColors = (inputObj: { [key: string]: any }) => {
+      const colors: string[] = [];
+      for (const key in inputObj) {
+        if (
+          Object.prototype.hasOwnProperty.call(inputObj, key) &&
+          typeof inputObj[key] === 'string'
+        ) {
+          colors.push(inputObj[key]);
+        }
+      }
+      return colors;
+    };
+
+    if (anser !== null) {
+      colorsArray = extractColors(anser);
+    }
+
+    createColordb(id, txet, number, colorsArray, 0);
+    return anser;
   } catch (e) {
     console.log(e);
   }
@@ -50,26 +72,25 @@ export const makeColor = async (text: string, number: number) => {
 export const toColorModel = (prismaColor: Color): ColorModel => ({
   id: prismaColor.id,
   createdAt: prismaColor.createdAt,
-  name: prismaColor.name,
+  txet: prismaColor.txet,
   paletteSize: prismaColor.paletteSize,
   color: prismaColor.color,
   like: prismaColor.like,
 });
 
-export const upsertColor = async (
-  id: ColorModel['id'],
-  name: ColorModel['name'],
+export const createColordb = async (
+  id: ColorModel['id'] | undefined,
+  txet: ColorModel['txet'],
   paletteSize: ColorModel['paletteSize'],
   color: ColorModel['color'],
   like: ColorModel['like']
 ) => {
+  console.log('aaa');
   const prismaColor = await prismaClient.color.upsert({
     where: { id },
     update: { like },
     create: {
-      id,
-      createdAt: new Date(),
-      name,
+      txet,
       paletteSize,
       color,
       like,
