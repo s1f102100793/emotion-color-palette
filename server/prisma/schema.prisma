@@ -13,3 +13,11 @@ model Task {
   done      Boolean
   createdAt DateTime
 }
+
+model Color {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  name      String
+  color     String
+  iine      Int
+}
