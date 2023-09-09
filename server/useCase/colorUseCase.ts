@@ -80,13 +80,20 @@ export const toColorModel = (prismaColor: Color): ColorModel => ({
 });
 
 const hexToDecimal = (hex: string): number => {
-  const r = parseInt(hex.slice(1, 3), 16).toString().padStart(3, '0');
-  const g = parseInt(hex.slice(3, 5), 16).toString().padStart(3, '0');
-  const b = parseInt(hex.slice(5, 7), 16).toString().padStart(3, '0');
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
 
-  const decimalValue = r + g + b;
+  // 各色の値を3桁の10進数の文字列に変換
+  const rStr = r.toString().padStart(3, '0');
+  const gStr = g.toString().padStart(3, '0');
+  const bStr = b.toString().padStart(3, '0');
 
-  return parseInt(decimalValue);
+  // 3桁の10進数の文字列を結合
+  const decimalValueStr = rStr + gStr + bStr;
+
+  // 9桁の10進数の数値に変換
+  return parseInt(decimalValueStr);
 };
 
 export const createColordb = async (

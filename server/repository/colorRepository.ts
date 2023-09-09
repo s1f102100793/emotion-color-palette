@@ -45,6 +45,7 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 };
 
 export const getItemsFromColor = async (startRange: number, endRange: number) => {
+  console.log(startRange, endRange);
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
   });
