@@ -7,6 +7,6 @@ export type Methods = DefineMethods<{
   };
   post: {
     reqBody: { type: string; numberlist: number[]; colorlist: number[][] };
-    resBody: (ColorModel[] | undefined)[] | (ColorModel | undefined)[] | undefined;
+    resBody: ColorModel[] | undefined;
   };
 }>;

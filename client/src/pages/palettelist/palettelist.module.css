@@ -1,3 +1,21 @@
 .container {
-  width: auto;
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 25%;
+  padding-right: 10px;
+}
+
+.mainContent {
+  width: 75%;
+  overflow: auto;
+}
+
+.paletteItem {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
 }

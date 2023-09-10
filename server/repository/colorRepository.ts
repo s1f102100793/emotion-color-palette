@@ -2,35 +2,34 @@ import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
 export const getItems = async (type: string, numberlist: number[], colorlist: number[][]) => {
-  try {
-    switch (type) {
-      case 'number':
-        if (Array.isArray(numberlist)) {
-          return await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
-        }
-        break;
-      case 'color':
-        if (Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
-          return await getItemsFromColor(colorlist as number[][]);
-        }
-        break;
-      case 'with':
-        if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
-          const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+  switch (type) {
+    case 'number':
+      if (Array.isArray(numberlist)) {
+        return (await Promise.all(numberlist.map((num) => getItemsFromNumber(num)))).flatMap(
+          (item) => item
+        );
+      }
+      break;
+    case 'color':
+      if (Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
+        return await getItemsFromColor(colorlist as number[][]);
+      }
+      break;
+    case 'with':
+      if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
+        const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
 
-          const colorItems = await getItemsFromColor(colorlist as number[][]);
+        const colorItems = await getItemsFromColor(colorlist as number[][]);
 
-          const flattenedNumberItems = numberItems.flatMap((item) => item);
+        const flattenedNumberItems = numberItems.flatMap((item) => item);
 
-          return flattenedNumberItems.filter(
-            (numberItem) =>
-              numberItem && colorItems.some((colorItem) => colorItem.id === numberItem.id)
-          );
-        }
-        break;
-    }
-  } catch (e) {
-    console.log(e);
+        return flattenedNumberItems.filter(
+          (numberItem) =>
+            numberItem !== undefined &&
+            colorItems.some((colorItem) => colorItem.id === numberItem.id)
+        );
+      }
+      break;
   }
 };
 
@@ -55,6 +54,7 @@ export const getItemsFromNumber = async (paletteSize: number) => {
     return prismaColor.map(toColorModel);
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
 

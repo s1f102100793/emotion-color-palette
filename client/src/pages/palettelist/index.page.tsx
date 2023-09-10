@@ -1,3 +1,4 @@
+import type { ColorModel } from 'commonTypesWithClient/models';
 import { useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
@@ -6,6 +7,8 @@ type ColorKey = 'ブルー' | 'レッド' | 'グリーン';
 
 const PaletteListPage = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
+  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+  const [palettes, setPalettes] = useState<ColorModel[]>([]);
 
   const hexToDecimal = (hex: string): number => {
     const r = parseInt(hex.slice(1, 3), 16).toString().padStart(3, '0');
@@ -20,19 +23,35 @@ const PaletteListPage = () => {
     グリーン: [hexToDecimal('#008000'), hexToDecimal('#00FF00')],
   };
 
-  const numberlist: number[] = [4];
-
-  const fetchPalettes = async (colorRanges: number[][]) => {
-    const fetchPalettes = await apiClient.item.$post({
-      body: { type: 'with', numberlist, colorlist: colorRanges },
+  const fetchPalettes = async (colorRanges: number[][], type: 'color' | 'number' | 'with') => {
+    const fetchedPalettes = await apiClient.item.$post({
+      body: { type, numberlist: selectedNumbers, colorlist: colorRanges },
     });
-    console.log(fetchPalettes);
-    return fetchPalettes;
+    console.log(fetchedPalettes);
+
+    if (Array.isArray(fetchedPalettes)) {
+      setPalettes(fetchedPalettes);
+    } else {
+      setPalettes([]);
+    }
+
+    return fetchedPalettes;
   };
 
   const handleFetch = () => {
     const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
-    fetchPalettes(rangesToSend);
+
+    let type: 'color' | 'number' | 'with' = 'color';
+
+    if (selectedNumbers.length === 0 && selectedColors.length > 0) {
+      type = 'color';
+    } else if (selectedNumbers.length > 0 && selectedColors.length === 0) {
+      type = 'number';
+    } else if (selectedNumbers.length > 0 && selectedColors.length > 0) {
+      type = 'with';
+    }
+
+    fetchPalettes(rangesToSend, type);
   };
 
   const handleColorChange = (color: ColorKey) => {
@@ -41,19 +60,58 @@ const PaletteListPage = () => {
     );
   };
 
+  const handleNumberChange = (num: number) => {
+    setSelectedNumbers((prev) =>
+      prev.includes(num) ? prev.filter((n) => n !== num) : [...prev, num]
+    );
+  };
+
   return (
     <div className={styles.container}>
-      {Object.keys(colorRanges).map((color) => (
-        <div key={color}>
-          <input
-            type="checkbox"
-            checked={selectedColors.includes(color as ColorKey)}
-            onChange={() => handleColorChange(color as ColorKey)}
-          />
-          <label>{color}</label>
+      <div className={styles.sidebar}>
+        {Object.keys(colorRanges).map((color) => (
+          <div key={color}>
+            <input
+              type="checkbox"
+              checked={selectedColors.includes(color as ColorKey)}
+              onChange={() => handleColorChange(color as ColorKey)}
+            />
+            <label>{color}</label>
+          </div>
+        ))}
+        <div>
+          {[4, 5, 6].map((num) => (
+            <div key={num}>
+              <input
+                type="checkbox"
+                checked={selectedNumbers.includes(num)}
+                onChange={() => handleNumberChange(num)}
+              />
+              <label>{num}</label>
+            </div>
+          ))}
         </div>
-      ))}
-      <button onClick={handleFetch}>パレットを取得</button>
+
+        <button onClick={handleFetch}>パレットを取得</button>
+      </div>
+      <div className={styles.mainContent}>
+        {palettes.map((palette) => (
+          <div key={palette.id} className={styles.paletteItem}>
+            <h3>{palette.txet}</h3>
+            <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>
+
+            <div>Size: {palette.paletteSize}</div>
+            <div>
+              Colors:
+              <ul>
+                {palette.color.map((color: string, idx: number) => (
+                  <li key={idx} style={{ background: color, width: '20px', height: '20px' }} />
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
