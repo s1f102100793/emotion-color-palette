@@ -4,36 +4,52 @@
 }
 
 .sidebar {
-  width: 25%;
+  width: 30%;
   padding-right: 10px;
 }
 
 .mainContent {
-  width: 75%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
   overflow: auto;
 }
 
 .paletteItem {
   position: relative;
   display: flex;
+  flex-basis: calc(25% - 10px);
   flex-direction: column;
   align-items: center;
   padding: 10px;
+  margin-right: 5px;
   margin-bottom: 20px;
+  margin-left: 5px;
   border: 1px solid #eee;
   border-radius: 5px;
 }
 
 .paletteItem .colorBox {
   display: flex;
-  width: 80%;
-  height: 50px;
+  width: 75%;
+  height: 20vh;
   margin-bottom: 10px;
 }
 
 .paletteItem .colorBox .color {
   flex: 1;
   height: 100%;
+}
+
+.paletteItem .colorBox .color:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.paletteItem .colorBox .color:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .paletteItem .info {
