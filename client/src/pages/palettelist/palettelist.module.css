@@ -4,18 +4,95 @@
 }
 
 .sidebar {
-  width: 25%;
-  padding-right: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100vh;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.targetCount {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.paletteNumbers,
+.paletteColors {
+  margin-bottom: 20px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.option input[type='checkbox'] {
+  margin-right: 10px;
+}
+
+.subtitle {
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .mainContent {
-  width: 75%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  margin-left: 30%;
   overflow: auto;
 }
 
 .paletteItem {
+  position: relative;
+  display: flex;
+  flex-basis: calc(25% - 10px);
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
+  margin-right: 5px;
   margin-bottom: 20px;
+  margin-left: 5px;
   border: 1px solid #eee;
   border-radius: 5px;
+}
+
+.paletteItem .colorBox {
+  display: flex;
+  width: 75%;
+  height: 20vh;
+  margin-bottom: 10px;
+}
+
+.paletteItem .colorBox .color {
+  flex: 1;
+  height: 100%;
+}
+
+.paletteItem .colorBox .color:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.paletteItem .colorBox .color:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.paletteItem .info {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.paletteItem h3 {
+  margin-top: 10px;
 }

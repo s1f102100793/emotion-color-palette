@@ -41,14 +41,17 @@ const PaletteListPage = () => {
   const handleFetch = () => {
     const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
 
-    let type: 'color' | 'number' | 'with' = 'color';
+    const hasNumbers = selectedNumbers.length > 0;
+    const hasColors = selectedColors.length > 0;
 
-    if (selectedNumbers.length === 0 && selectedColors.length > 0) {
-      type = 'color';
-    } else if (selectedNumbers.length > 0 && selectedColors.length === 0) {
-      type = 'number';
-    } else if (selectedNumbers.length > 0 && selectedColors.length > 0) {
+    let type: 'color' | 'number' | 'with';
+
+    if (hasNumbers && hasColors) {
       type = 'with';
+    } else if (hasNumbers) {
+      type = 'number';
+    } else {
+      type = 'color';
     }
 
     fetchPalettes(rangesToSend, type);
@@ -69,45 +72,56 @@ const PaletteListPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        {Object.keys(colorRanges).map((color) => (
-          <div key={color}>
-            <input
-              type="checkbox"
-              checked={selectedColors.includes(color as ColorKey)}
-              onChange={() => handleColorChange(color as ColorKey)}
-            />
-            <label>{color}</label>
-          </div>
-        ))}
-        <div>
+        <div className={styles.targetCount}>
+          <span>対象パレット</span>
+          <span>{selectedNumbers.length * selectedColors.length}件</span>
+        </div>
+
+        <div className={styles.paletteNumbers}>
+          <div className={styles.subtitle}>パレット数</div>
+
           {[4, 5, 6].map((num) => (
-            <div key={num}>
+            <div key={num} className={styles.option}>
               <input
                 type="checkbox"
                 checked={selectedNumbers.includes(num)}
                 onChange={() => handleNumberChange(num)}
               />
-              <label>{num}</label>
+              <label>{num}色</label>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.paletteColors}>
+          <div className={styles.subtitle}>カラー</div>
+
+          {Object.keys(colorRanges).map((color) => (
+            <div key={color} className={styles.option}>
+              <input
+                type="checkbox"
+                checked={selectedColors.includes(color as ColorKey)}
+                onChange={() => handleColorChange(color as ColorKey)}
+              />
+              <label>{color}</label>
             </div>
           ))}
         </div>
 
         <button onClick={handleFetch}>パレットを取得</button>
       </div>
+
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
+            <div className={styles.colorBox}>
+              {palette.color.map((color: string, idx: number) => (
+                <div key={idx} className={styles.color} style={{ background: color }} />
+              ))}
+            </div>
             <h3>{palette.txet}</h3>
-            <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>
-
-            <div>Size: {palette.paletteSize}</div>
-            <div>
-              Colors:
-              <ul>
-                {palette.color.map((color: string, idx: number) => (
-                  <li key={idx} style={{ background: color, width: '20px', height: '20px' }} />
-                ))}
-              </ul>
+            <div className={styles.info}>
+              <div>Like: {/* ここにlike数を入れる */}</div>
+              <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>
             </div>
           </div>
         ))}

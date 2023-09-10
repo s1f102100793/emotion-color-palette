@@ -1,6 +1,7 @@
 import { prismaClient } from '$/service/prismaClient';
 import { toColorModel } from '$/useCase/colorUseCase';
 
+// eslint-disable-next-line complexity
 export const getItems = async (type: string, numberlist: number[], colorlist: number[][]) => {
   switch (type) {
     case 'number':
