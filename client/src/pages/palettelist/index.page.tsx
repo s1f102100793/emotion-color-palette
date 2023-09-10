@@ -41,14 +41,17 @@ const PaletteListPage = () => {
   const handleFetch = () => {
     const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
 
-    let type: 'color' | 'number' | 'with' = 'color';
+    const hasNumbers = selectedNumbers.length > 0;
+    const hasColors = selectedColors.length > 0;
 
-    if (selectedNumbers.length === 0 && selectedColors.length > 0) {
-      type = 'color';
-    } else if (selectedNumbers.length > 0 && selectedColors.length === 0) {
-      type = 'number';
-    } else if (selectedNumbers.length > 0 && selectedColors.length > 0) {
+    let type: 'color' | 'number' | 'with';
+
+    if (hasNumbers && hasColors) {
       type = 'with';
+    } else if (hasNumbers) {
+      type = 'number';
+    } else {
+      type = 'color';
     }
 
     fetchPalettes(rangesToSend, type);
