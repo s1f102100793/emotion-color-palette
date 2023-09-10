@@ -14,8 +14,34 @@
 }
 
 .paletteItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #eee;
   border-radius: 5px;
+}
+
+.paletteItem .colorBox {
+  display: flex;
+  width: 80%;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.paletteItem .colorBox .color {
+  flex: 1;
+  height: 100%;
+}
+
+.paletteItem .info {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.paletteItem h3 {
+  margin-top: 10px;
 }
