@@ -4,8 +4,42 @@
 }
 
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 30%;
-  padding-right: 10px;
+  height: 100vh;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.targetCount {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.paletteNumbers,
+.paletteColors {
+  margin-bottom: 20px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.option input[type='checkbox'] {
+  margin-right: 10px;
+}
+
+.subtitle {
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .mainContent {
@@ -13,6 +47,7 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   width: 100%;
+  margin-left: 30%;
   overflow: auto;
 }
 

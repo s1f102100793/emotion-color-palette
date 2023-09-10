@@ -72,31 +72,44 @@ const PaletteListPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        {Object.keys(colorRanges).map((color) => (
-          <div key={color}>
-            <input
-              type="checkbox"
-              checked={selectedColors.includes(color as ColorKey)}
-              onChange={() => handleColorChange(color as ColorKey)}
-            />
-            <label>{color}</label>
-          </div>
-        ))}
-        <div>
+        <div className={styles.targetCount}>
+          <span>対象パレット</span>
+          <span>{selectedNumbers.length * selectedColors.length}件</span>
+        </div>
+
+        <div className={styles.paletteNumbers}>
+          <div className={styles.subtitle}>パレット数</div>
+
           {[4, 5, 6].map((num) => (
-            <div key={num}>
+            <div key={num} className={styles.option}>
               <input
                 type="checkbox"
                 checked={selectedNumbers.includes(num)}
                 onChange={() => handleNumberChange(num)}
               />
-              <label>{num}</label>
+              <label>{num}色</label>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.paletteColors}>
+          <div className={styles.subtitle}>カラー</div>
+
+          {Object.keys(colorRanges).map((color) => (
+            <div key={color} className={styles.option}>
+              <input
+                type="checkbox"
+                checked={selectedColors.includes(color as ColorKey)}
+                onChange={() => handleColorChange(color as ColorKey)}
+              />
+              <label>{color}</label>
             </div>
           ))}
         </div>
 
         <button onClick={handleFetch}>パレットを取得</button>
       </div>
+
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
