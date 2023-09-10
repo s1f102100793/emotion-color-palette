@@ -1,5 +1,5 @@
 import type { ColorModel } from 'commonTypesWithClient/models';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
 
@@ -9,6 +9,7 @@ const PaletteListPage = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [palettes, setPalettes] = useState<ColorModel[]>([]);
+  const [currentCount, setCurrentCount] = useState(0);
 
   const hexToDecimal = (hex: string): number => {
     const r = parseInt(hex.slice(1, 3), 16).toString().padStart(3, '0');
@@ -69,12 +70,35 @@ const PaletteListPage = () => {
     );
   };
 
+  useEffect(() => {
+    const start = Date.now();
+
+    const duration = 2000;
+
+    const animateCount = () => {
+      const now = Date.now();
+      let elapsed = now - start;
+
+      if (elapsed > duration) elapsed = duration;
+
+      const progress = elapsed / duration;
+
+      setCurrentCount(Math.round(progress * palettes.length));
+
+      if (elapsed < duration) {
+        requestAnimationFrame(animateCount);
+      }
+    };
+
+    animateCount();
+  }, [palettes.length]);
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.targetCount}>
           <span>対象パレット</span>
-          <span>{selectedNumbers.length * selectedColors.length}件</span>
+          <span>{currentCount}件</span>
         </div>
 
         <div className={styles.paletteNumbers}>
