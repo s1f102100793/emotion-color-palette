@@ -19,6 +19,12 @@ export type ColorModel = {
   createdAt: Date;
   txet: string;
   paletteSize: number;
-  color: string[];
+  color: RGBModel[];
   like: number;
+};
+
+export type RGBModel = {
+  rStr: number;
+  gStr: number;
+  bStr: number;
 };

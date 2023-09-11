@@ -1,5 +1,4 @@
-import type { ColorModel } from '$/commonTypesWithClient/models';
-import { decimalToHex } from '$/repository/colorRepository';
+import type { ColorModel, RGBModel } from '$/commonTypesWithClient/models';
 import { OPENAIAPI } from '$/service/envValues';
 import { prismaClient } from '$/service/prismaClient';
 import type { Color } from '@prisma/client';
@@ -44,7 +43,8 @@ export const makeColor = async (txet: string, number: number, id: number | undef
     console.log(res);
     const anser = await parser.parse(res);
 
-    let colorsArray: string[] = [];
+    let hexColorsArray: string[] = [];
+    let colorsArray: RGBModel[] = [];
 
     const extractColors = (inputObj: { [key: string]: string }): string[] => {
       const colors: string[] = [];
@@ -60,22 +60,29 @@ export const makeColor = async (txet: string, number: number, id: number | undef
     };
 
     if (anser !== null) {
-      colorsArray = extractColors(anser);
+      hexColorsArray = extractColors(anser);
+      colorsArray = hexColorsArray.map((color) => hexToRGBModel(color)); // 16進カラーコードを RGBModel に変換
     }
 
-    createColordb(id, txet, number, colorsArray, 0);
-    return anser;
+    createColordb(id, txet, number, colorsArray, 0); // 更新された colorsArray を渡す
+    return anser; // anser の型は変わりません
   } catch (e) {
     console.log(e);
   }
 };
+
+const RGBModelSchema = z.object({
+  rStr: z.number(),
+  gStr: z.number(),
+  bStr: z.number(),
+});
 
 export const toColorModel = (prismaColor: Color): ColorModel => ({
   id: prismaColor.id,
   createdAt: prismaColor.createdAt,
   txet: prismaColor.txet,
   paletteSize: prismaColor.paletteSize,
-  color: prismaColor.color.map(decimalToHex),
+  color: z.array(RGBModelSchema).parse(prismaColor.color),
   like: prismaColor.like,
 });
 
@@ -96,19 +103,40 @@ const hexToDecimal = (hex: string): number => {
   return parseInt(decimalValueStr);
 };
 
+const hexToRGBModel = (hex: string): RGBModel => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  // 各色の値を3桁の10進数に変換
+  const rNum = Number(r.toString().padStart(3, '0'));
+  const gNum = Number(g.toString().padStart(3, '0'));
+  const bNum = Number(b.toString().padStart(3, '0'));
+
+  return {
+    rStr: rNum,
+    gStr: gNum,
+    bStr: bNum,
+  };
+};
+
+const rgbModelToDecimal = (rgb: RGBModel): number => {
+  const combinedStr = `${rgb.rStr}${rgb.gStr}${rgb.bStr}`;
+  return Number(combinedStr);
+};
+
 export const createColordb = async (
   id: ColorModel['id'] | undefined,
   txet: ColorModel['txet'],
   paletteSize: ColorModel['paletteSize'],
-  color: ColorModel['color'],
+  color: RGBModel[],
   like: ColorModel['like']
 ) => {
   console.log('aaa');
 
+  const colorJson = JSON.stringify(color);
+
   let prismaColor;
-
-  const decimalColors = color.map(hexToDecimal);
-
   if (id !== undefined && id !== null) {
     prismaColor = await prismaClient.color.update({
       where: { id },
@@ -116,7 +144,7 @@ export const createColordb = async (
         like,
         txet,
         paletteSize,
-        color: decimalColors,
+        color: colorJson,
       },
     });
   } else {
@@ -124,7 +152,7 @@ export const createColordb = async (
       data: {
         txet,
         paletteSize,
-        color: decimalColors,
+        color: colorJson,
         like,
       },
     });

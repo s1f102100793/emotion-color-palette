@@ -19,6 +19,6 @@ model Color {
   createdAt   DateTime @default(now())
   txet        String
   paletteSize Int
-  color       Int[]
+  color       Json
   like        Int
 }
