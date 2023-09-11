@@ -6,20 +6,37 @@
 .sidebar {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 30%;
+  left: 5%;
+  width: 22%;
   height: 100vh;
   padding: 20px;
+  background-color: #c1c1c1;
   border: 1px solid #eee;
   border-radius: 5px;
 }
 
 .targetCount {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
+}
+
+.targetCount > span:first-child {
+  margin-bottom: 5px; 
+}
+
+.targetCount > span:nth-child(2) {
+  display: flex;
+  align-items: flex-end; 
+  font-size: 24px; 
+}
+
+.targetCount > span:nth-child(2) > span:last-child {
+  margin-left: 5px; 
+  font-size: 12px; 
 }
 
 .paletteNumbers,
