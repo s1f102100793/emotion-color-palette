@@ -10,7 +10,7 @@ import { apiClient } from 'src/utils/apiClient';
 
 export const usePaletteList = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([4, 5, 6]);
   const [palettes, setPalettes] = useState<ReturnColorModel[]>([]);
   const [currentCount, setCurrentCount] = useState(0);
 
@@ -87,6 +87,9 @@ export const usePaletteList = () => {
     return fetchedPalettes;
   };
 
+  const [rangesToSend, setRangesToSend] = useState<RGBModel[][]>([]);
+  const [currentType, setCurrentType] = useState<'color' | 'number' | 'with'>('with');
+
   const handleFetch = () => {
     const rangesToSend = selectedColors.flatMap((colorKey) =>
       colorGroups[colorKey].map((key) => colorRanges[key])
@@ -105,7 +108,8 @@ export const usePaletteList = () => {
       type = 'color';
     }
 
-    fetchPalettes(rangesToSend, type);
+    setRangesToSend(rangesToSend);
+    setCurrentType(type);
   };
 
   const handleColorChange = (color: ColorKey) => {
@@ -127,8 +131,11 @@ export const usePaletteList = () => {
     currentCount,
     setCurrentCount,
     colorGroups,
+    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
+    rangesToSend,
+    currentType,
   };
 };

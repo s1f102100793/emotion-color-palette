@@ -11,9 +11,12 @@ const PaletteListPage = () => {
     currentCount,
     setCurrentCount,
     colorGroups,
+    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
+    rangesToSend,
+    currentType,
   } = usePaletteList();
 
   useEffect(() => {
@@ -53,6 +56,39 @@ const PaletteListPage = () => {
   }, []);
 
   useEffect(() => {
+    console.log('This useEffect is running');
+    const leftsidebar = document.querySelector('.leftsidebar') as HTMLElement | null;
+
+    if (!leftsidebar) {
+      return;
+    }
+
+    const initialTop = '10%';
+
+    const handleScroll = () => {
+      // leftsidebarの一番下の位置を取得
+      const leftsidebarBottomPosition = leftsidebar.getBoundingClientRect().bottom;
+
+      // ウィンドウの一番下の位置を取得
+      const windowBottomPosition = window.innerHeight;
+
+      // leftsidebarの一番下の位置がウィンドウの一番下の位置に達したか確認
+      if (leftsidebarBottomPosition >= windowBottomPosition) {
+        const difference = leftsidebarBottomPosition - windowBottomPosition;
+        leftsidebar.style.top = `calc(${initialTop} - ${difference}px)`;
+      } else {
+        leftsidebar.style.top = initialTop;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     const start = Date.now();
 
     const duration = 2000;
@@ -75,9 +111,19 @@ const PaletteListPage = () => {
     animateCount();
   }, [palettes.length, setCurrentCount]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchPalettes(rangesToSend, currentType);
+    }, 100);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [fetchPalettes, rangesToSend, currentType]);
+
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
+      <div className={styles.leftsidebar}>
         <div className={styles.targetCount}>
           <span>対象パレット</span>
           <div>
