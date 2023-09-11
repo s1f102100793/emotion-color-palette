@@ -4,6 +4,7 @@ import { usePaletteList } from 'src/hooks/usePaletteList';
 import styles from './palettelist.module.css';
 
 const PaletteListPage = () => {
+  console.log('PaletteListPage rendered');
   const {
     selectedColors,
     selectedNumbers,
@@ -15,6 +16,34 @@ const PaletteListPage = () => {
     handleNumberChange,
     handleFetch,
   } = usePaletteList();
+
+  useEffect(() => {
+    console.log('useEffect is running');
+    const sidebar = document.querySelector('.sidebar') as HTMLElement | null;
+
+    if (!sidebar) {
+      return;
+    }
+
+    const stickyScrollPoint = 100;
+
+    const handleScroll = () => {
+      console.log('Scroll detected:', window.scrollY);
+      if (window.scrollY > stickyScrollPoint) {
+        sidebar.style.position = 'absolute';
+        sidebar.style.top = `${stickyScrollPoint}px`;
+      } else {
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '20px';
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const start = Date.now();
