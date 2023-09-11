@@ -37,3 +37,38 @@ export type ReturnColorModel = {
   color: string[];
   like: number;
 };
+
+export type ColorRangeKeys =
+  | 'R1G1B1'
+  | 'R1G1B2'
+  | 'R1G1B3'
+  | 'R1G2B1'
+  | 'R1G2B2'
+  | 'R1G2B3'
+  | 'R1G3B1'
+  | 'R1G3B2'
+  | 'R1G3B3'
+  | 'R2G1B1'
+  | 'R2G1B2'
+  | 'R2G1B3'
+  | 'R2G2B1'
+  | 'R2G2B2'
+  | 'R2G2B3'
+  | 'R2G3B1'
+  | 'R2G3B2'
+  | 'R2G3B3'
+  | 'R3G1B1'
+  | 'R3G1B2'
+  | 'R3G1B3'
+  | 'R3G2B1'
+  | 'R3G2B2'
+  | 'R3G2B3'
+  | 'R3G3B1'
+  | 'R3G3B2'
+  | 'R3G3B3';
+
+export type ColorRanges = {
+  [key in ColorRangeKeys]: RGBModel[];
+};
+
+export type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';

@@ -1,8 +1,13 @@
-import type { RGBModel, ReturnColorModel } from 'commonTypesWithClient/models';
+import type {
+  ColorKey,
+  ColorRangeKeys,
+  ColorRanges,
+  RGBModel,
+  ReturnColorModel,
+} from 'commonTypesWithClient/models';
 import { useEffect, useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
-type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';
 
 const PaletteListPage = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
@@ -16,39 +21,6 @@ const PaletteListPage = () => {
       gStr: parseInt(hex.slice(3, 5), 16),
       bStr: parseInt(hex.slice(5, 7), 16),
     };
-  };
-
-  type ColorRangeKeys =
-    | 'R1G1B1'
-    | 'R1G1B2'
-    | 'R1G1B3'
-    | 'R1G2B1'
-    | 'R1G2B2'
-    | 'R1G2B3'
-    | 'R1G3B1'
-    | 'R1G3B2'
-    | 'R1G3B3'
-    | 'R2G1B1'
-    | 'R2G1B2'
-    | 'R2G1B3'
-    | 'R2G2B1'
-    | 'R2G2B2'
-    | 'R2G2B3'
-    | 'R2G3B1'
-    | 'R2G3B2'
-    | 'R2G3B3'
-    | 'R3G1B1'
-    | 'R3G1B2'
-    | 'R3G1B3'
-    | 'R3G2B1'
-    | 'R3G2B2'
-    | 'R3G2B3'
-    | 'R3G3B1'
-    | 'R3G3B2'
-    | 'R3G3B3';
-
-  type ColorRanges = {
-    [key in ColorRangeKeys]: RGBModel[];
   };
 
   const colorRanges: ColorRanges = {
@@ -189,12 +161,13 @@ const PaletteListPage = () => {
       <div className={styles.sidebar}>
         <div className={styles.targetCount}>
           <span>対象パレット</span>
-          <span>{currentCount}件</span>
+          <div>
+            <span className={styles.currentCount}>{currentCount}</span>
+            <span className={styles.countLabel}>件</span>
+          </div>
         </div>
-
         <div className={styles.paletteNumbers}>
           <div className={styles.subtitle}>パレット数</div>
-
           {[4, 5, 6].map((num) => (
             <div key={num} className={styles.option}>
               <input
@@ -206,10 +179,8 @@ const PaletteListPage = () => {
             </div>
           ))}
         </div>
-
         <div className={styles.paletteColors}>
           <div className={styles.subtitle}>カラー</div>
-
           {Object.keys(colorGroups).map((color) => (
             <div key={color} className={styles.option}>
               <input
@@ -221,10 +192,8 @@ const PaletteListPage = () => {
             </div>
           ))}
         </div>
-
         <button onClick={handleFetch}>パレットを取得</button>
       </div>
-
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>

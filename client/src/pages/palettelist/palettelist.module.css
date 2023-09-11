@@ -9,8 +9,6 @@
   left: 5%;
   width: 22%;
   height: 100vh;
-  padding: 20px;
-  background-color: #c1c1c1;
   border: 1px solid #eee;
   border-radius: 5px;
 }
@@ -19,24 +17,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 10px;
+  padding: 20px 20px 10px; 
   margin-bottom: 10px;
+  background-color: #c1c1c1;
   border-bottom: 1px solid #ddd;
 }
 
+.targetCount > div {
+  display: flex;
+  align-items: flex-end;
+}
+
+.currentCount {
+  font-size: 36px;
+}
+
+.countLabel {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
 .targetCount > span:first-child {
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
 }
 
 .targetCount > span:nth-child(2) {
   display: flex;
-  align-items: flex-end; 
-  font-size: 24px; 
+  align-items: flex-end;
+  font-size: 24px;
 }
 
 .targetCount > span:nth-child(2) > span:last-child {
-  margin-left: 5px; 
-  font-size: 12px; 
+  margin-left: 5px;
+  font-size: 12px;
 }
 
 .paletteNumbers,
