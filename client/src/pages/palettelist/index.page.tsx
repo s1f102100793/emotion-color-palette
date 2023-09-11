@@ -4,7 +4,6 @@ import { usePaletteList } from 'src/hooks/usePaletteList';
 import styles from './palettelist.module.css';
 
 const PaletteListPage = () => {
-  console.log('PaletteListPage rendered');
   const {
     selectedColors,
     selectedNumbers,
@@ -40,8 +39,49 @@ const PaletteListPage = () => {
 
     window.addEventListener('scroll', handleScroll);
 
+    window.addEventListener('scroll', () => {
+      console.log('Direct scroll listener: ', window.scrollY);
+    });
+
+    // あるいは
+
+    document.addEventListener('scroll', () => {
+      console.log('Direct scroll listener on document: ', window.scrollY);
+    });
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('useEffect for .mainContent scroll is running');
+    const mainContent = document.querySelector('.mainContent') as HTMLElement | null;
+
+    if (!mainContent) {
+      return;
+    }
+
+    const handleScroll = () => {
+      console.log('Scroll detected on .mainContent:', mainContent.scrollTop);
+    };
+
+    mainContent.addEventListener('scroll', handleScroll);
+
+    return () => {
+      mainContent.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClick = () => {
+      console.log('Page was clicked!');
+    };
+
+    window.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('click', handleClick);
     };
   }, []);
 
