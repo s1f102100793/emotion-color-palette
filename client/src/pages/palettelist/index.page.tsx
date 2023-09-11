@@ -1,4 +1,4 @@
-import type { ColorModel } from 'commonTypesWithClient/models';
+import type { RGBModel, ReturnColorModel } from 'commonTypesWithClient/models';
 import { useEffect, useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
@@ -7,14 +7,15 @@ type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ
 const PaletteListPage = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
-  const [palettes, setPalettes] = useState<ColorModel[]>([]);
+  const [palettes, setPalettes] = useState<ReturnColorModel[]>([]);
   const [currentCount, setCurrentCount] = useState(0);
 
-  const hexToDecimal = (hex: string): number => {
-    const r = parseInt(hex.slice(1, 3), 16).toString().padStart(3, '0');
-    const g = parseInt(hex.slice(3, 5), 16).toString().padStart(3, '0');
-    const b = parseInt(hex.slice(5, 7), 16).toString().padStart(3, '0');
-    return parseInt(r + g + b);
+  const hexToRGB = (hex: string): RGBModel => {
+    return {
+      rStr: parseInt(hex.slice(1, 3), 16),
+      gStr: parseInt(hex.slice(3, 5), 16),
+      bStr: parseInt(hex.slice(5, 7), 16),
+    };
   };
 
   type ColorRangeKeys =
@@ -47,45 +48,45 @@ const PaletteListPage = () => {
     | 'R3G3B3';
 
   type ColorRanges = {
-    [key in ColorRangeKeys]: number[];
+    [key in ColorRangeKeys]: RGBModel[];
   };
 
   const colorRanges: ColorRanges = {
-    R1G1B1: [hexToDecimal('#000000'), hexToDecimal('#555555')],
-    R1G1B2: [hexToDecimal('#000056'), hexToDecimal('#5555AA')],
-    R1G1B3: [hexToDecimal('#0000AB'), hexToDecimal('#5555FF')],
+    R1G1B1: [hexToRGB('#000000'), hexToRGB('#555555')],
+    R1G1B2: [hexToRGB('#000056'), hexToRGB('#5555AA')],
+    R1G1B3: [hexToRGB('#0000AB'), hexToRGB('#5555FF')],
 
-    R1G2B1: [hexToDecimal('#005500'), hexToDecimal('#55AA55')],
-    R1G2B2: [hexToDecimal('#005556'), hexToDecimal('#55AAAA')],
-    R1G2B3: [hexToDecimal('#0055AB'), hexToDecimal('#55AAFF')],
+    R1G2B1: [hexToRGB('#005500'), hexToRGB('#55AA55')],
+    R1G2B2: [hexToRGB('#005556'), hexToRGB('#55AAAA')],
+    R1G2B3: [hexToRGB('#0055AB'), hexToRGB('#55AAFF')],
 
-    R1G3B1: [hexToDecimal('#00AA00'), hexToDecimal('#00FF55')],
-    R1G3B2: [hexToDecimal('#00AA56'), hexToDecimal('#00FFAA')],
-    R1G3B3: [hexToDecimal('#00AAAB'), hexToDecimal('#00FFFF')],
+    R1G3B1: [hexToRGB('#00AA00'), hexToRGB('#00FF55')],
+    R1G3B2: [hexToRGB('#00AA56'), hexToRGB('#00FFAA')],
+    R1G3B3: [hexToRGB('#00AAAB'), hexToRGB('#00FFFF')],
 
-    R2G1B1: [hexToDecimal('#550000'), hexToDecimal('#AA5555')],
-    R2G1B2: [hexToDecimal('#550056'), hexToDecimal('#AA55AA')],
-    R2G1B3: [hexToDecimal('#5500AB'), hexToDecimal('#AA55FF')],
+    R2G1B1: [hexToRGB('#550000'), hexToRGB('#AA5555')],
+    R2G1B2: [hexToRGB('#550056'), hexToRGB('#AA55AA')],
+    R2G1B3: [hexToRGB('#5500AB'), hexToRGB('#AA55FF')],
 
-    R2G2B1: [hexToDecimal('#555500'), hexToDecimal('#AAAA55')],
-    R2G2B2: [hexToDecimal('#555556'), hexToDecimal('#AAAAAA')],
-    R2G2B3: [hexToDecimal('#5555AB'), hexToDecimal('#AAAAFF')],
+    R2G2B1: [hexToRGB('#555500'), hexToRGB('#AAAA55')],
+    R2G2B2: [hexToRGB('#555556'), hexToRGB('#AAAAAA')],
+    R2G2B3: [hexToRGB('#5555AB'), hexToRGB('#AAAAFF')],
 
-    R2G3B1: [hexToDecimal('#55AA00'), hexToDecimal('#55FF55')],
-    R2G3B2: [hexToDecimal('#55AA56'), hexToDecimal('#55FFAA')],
-    R2G3B3: [hexToDecimal('#55AAAB'), hexToDecimal('#55FFFF')],
+    R2G3B1: [hexToRGB('#55AA00'), hexToRGB('#55FF55')],
+    R2G3B2: [hexToRGB('#55AA56'), hexToRGB('#55FFAA')],
+    R2G3B3: [hexToRGB('#55AAAB'), hexToRGB('#55FFFF')],
 
-    R3G1B1: [hexToDecimal('#AA0000'), hexToDecimal('#FF5555')],
-    R3G1B2: [hexToDecimal('#AA0056'), hexToDecimal('#FF55AA')],
-    R3G1B3: [hexToDecimal('#AA00AB'), hexToDecimal('#FF55FF')],
+    R3G1B1: [hexToRGB('#AA0000'), hexToRGB('#FF5555')],
+    R3G1B2: [hexToRGB('#AA0056'), hexToRGB('#FF55AA')],
+    R3G1B3: [hexToRGB('#AA00AB'), hexToRGB('#FF55FF')],
 
-    R3G2B1: [hexToDecimal('#AA5500'), hexToDecimal('#AAAA55')],
-    R3G2B2: [hexToDecimal('#AA5556'), hexToDecimal('#AAAAAA')],
-    R3G2B3: [hexToDecimal('#AA55AB'), hexToDecimal('#AAAAFF')],
+    R3G2B1: [hexToRGB('#AA5500'), hexToRGB('#AAAA55')],
+    R3G2B2: [hexToRGB('#AA5556'), hexToRGB('#AAAAAA')],
+    R3G2B3: [hexToRGB('#AA55AB'), hexToRGB('#AAAAFF')],
 
-    R3G3B1: [hexToDecimal('#AAAA00'), hexToDecimal('#FFFF55')],
-    R3G3B2: [hexToDecimal('#AAAA56'), hexToDecimal('#FFFFAA')],
-    R3G3B3: [hexToDecimal('#AAAAAB'), hexToDecimal('#FFFFFF')],
+    R3G3B1: [hexToRGB('#AAAA00'), hexToRGB('#FFFF55')],
+    R3G3B2: [hexToRGB('#AAAA56'), hexToRGB('#FFFFAA')],
+    R3G3B3: [hexToRGB('#AAAAAB'), hexToRGB('#FFFFFF')],
   };
 
   type ColorGroups = {
@@ -112,7 +113,7 @@ const PaletteListPage = () => {
     白: ['R3G3B2', 'R3G3B3'],
   };
 
-  const fetchPalettes = async (colorGroups: number[][], type: 'color' | 'number' | 'with') => {
+  const fetchPalettes = async (colorGroups: RGBModel[][], type: 'color' | 'number' | 'with') => {
     const fetchedPalettes = await apiClient.item.$post({
       body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
     });
@@ -232,7 +233,7 @@ const PaletteListPage = () => {
                 <div key={idx} className={styles.color} style={{ background: color }} />
               ))}
             </div>
-            <h3>{palette.txet}</h3>
+            <h3>{palette.text}</h3>
             <div className={styles.info}>
               <div>Like: {/* ここにlike数を入れる */}</div>
               <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>

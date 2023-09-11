@@ -17,7 +17,22 @@ export type TaskModel = {
 export type ColorModel = {
   id: number;
   createdAt: Date;
-  txet: string;
+  text: string;
+  paletteSize: number;
+  color: RGBModel[];
+  like: number;
+};
+
+export type RGBModel = {
+  rStr: number;
+  gStr: number;
+  bStr: number;
+};
+
+export type ReturnColorModel = {
+  id: number;
+  createdAt: Date;
+  text: string;
   paletteSize: number;
   color: string[];
   like: number;
