@@ -1,14 +1,17 @@
-import type { RGBModel } from '$/commonTypesWithClient/models';
+import type { RGBModel, ReturnColorModel } from '$/commonTypesWithClient/models';
 import { prismaClient } from '$/service/prismaClient';
 
 // eslint-disable-next-line complexity
-export const getItems = async (type: string, numberlist: number[], colorlist: RGBModel[][]) => {
+export const getItems = async (
+  type: string,
+  numberlist: number[],
+  colorlist: RGBModel[][]
+): Promise<ReturnColorModel[]> => {
   switch (type) {
     case 'number':
       if (Array.isArray(numberlist)) {
-        return (await Promise.all(numberlist.map((num) => getItemsFromNumber(num)))).flatMap(
-          (item) => item
-        );
+        const results = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+        return results.flatMap((item) => item);
       }
       break;
     case 'color':
@@ -31,7 +34,10 @@ export const getItems = async (type: string, numberlist: number[], colorlist: RG
         );
       }
       break;
+    default:
+      throw new Error('Invalid type provided.');
   }
+  return [];
 };
 
 const rgbToHex = (rgb: { rStr: number; gStr: number; bStr: number }): string => {
@@ -47,9 +53,10 @@ export const getItemsFromNumber = async (paletteSize: number) => {
     where: { paletteSize },
     select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
   });
+  console.log(typeof prismaColor, Array.isArray(prismaColor));
 
   return prismaColor.map((colorItem) => {
-    const parsedColors = JSON.parse(colorItem.color as string);
+    const parsedColors = JSON.parse(colorItem.color as string) as RGBModel[];
     return {
       ...colorItem,
       color: parsedColors.map(rgbToHex),

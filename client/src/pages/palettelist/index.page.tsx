@@ -1,165 +1,89 @@
-import type { RGBModel, ReturnColorModel } from 'commonTypesWithClient/models';
-import { useEffect, useState } from 'react';
-import { apiClient } from 'src/utils/apiClient';
+import type { ColorKey } from 'commonTypesWithClient/models';
+import { useEffect } from 'react';
+import { usePaletteList } from 'src/hooks/usePaletteList';
 import styles from './palettelist.module.css';
-type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';
 
 const PaletteListPage = () => {
-  const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
-  const [palettes, setPalettes] = useState<ReturnColorModel[]>([]);
-  const [currentCount, setCurrentCount] = useState(0);
+  const {
+    selectedColors,
+    selectedNumbers,
+    palettes,
+    currentCount,
+    setCurrentCount,
+    colorGroups,
+    handleColorChange,
+    handleNumberChange,
+    handleFetch,
+  } = usePaletteList();
 
-  const hexToRGB = (hex: string): RGBModel => {
-    return {
-      rStr: parseInt(hex.slice(1, 3), 16),
-      gStr: parseInt(hex.slice(3, 5), 16),
-      bStr: parseInt(hex.slice(5, 7), 16),
+  useEffect(() => {
+    console.log('useEffect is running');
+    const sidebar = document.querySelector('.sidebar') as HTMLElement | null;
+
+    if (!sidebar) {
+      return;
+    }
+
+    const stickyScrollPoint = 100;
+
+    const handleScroll = () => {
+      console.log('Scroll detected:', window.scrollY);
+      if (window.scrollY > stickyScrollPoint) {
+        sidebar.style.position = 'absolute';
+        sidebar.style.top = `${stickyScrollPoint}px`;
+      } else {
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '20px';
+      }
     };
-  };
 
-  type ColorRangeKeys =
-    | 'R1G1B1'
-    | 'R1G1B2'
-    | 'R1G1B3'
-    | 'R1G2B1'
-    | 'R1G2B2'
-    | 'R1G2B3'
-    | 'R1G3B1'
-    | 'R1G3B2'
-    | 'R1G3B3'
-    | 'R2G1B1'
-    | 'R2G1B2'
-    | 'R2G1B3'
-    | 'R2G2B1'
-    | 'R2G2B2'
-    | 'R2G2B3'
-    | 'R2G3B1'
-    | 'R2G3B2'
-    | 'R2G3B3'
-    | 'R3G1B1'
-    | 'R3G1B2'
-    | 'R3G1B3'
-    | 'R3G2B1'
-    | 'R3G2B2'
-    | 'R3G2B3'
-    | 'R3G3B1'
-    | 'R3G3B2'
-    | 'R3G3B3';
+    window.addEventListener('scroll', handleScroll);
 
-  type ColorRanges = {
-    [key in ColorRangeKeys]: RGBModel[];
-  };
-
-  const colorRanges: ColorRanges = {
-    R1G1B1: [hexToRGB('#000000'), hexToRGB('#555555')],
-    R1G1B2: [hexToRGB('#000056'), hexToRGB('#5555AA')],
-    R1G1B3: [hexToRGB('#0000AB'), hexToRGB('#5555FF')],
-
-    R1G2B1: [hexToRGB('#005500'), hexToRGB('#55AA55')],
-    R1G2B2: [hexToRGB('#005556'), hexToRGB('#55AAAA')],
-    R1G2B3: [hexToRGB('#0055AB'), hexToRGB('#55AAFF')],
-
-    R1G3B1: [hexToRGB('#00AA00'), hexToRGB('#00FF55')],
-    R1G3B2: [hexToRGB('#00AA56'), hexToRGB('#00FFAA')],
-    R1G3B3: [hexToRGB('#00AAAB'), hexToRGB('#00FFFF')],
-
-    R2G1B1: [hexToRGB('#550000'), hexToRGB('#AA5555')],
-    R2G1B2: [hexToRGB('#550056'), hexToRGB('#AA55AA')],
-    R2G1B3: [hexToRGB('#5500AB'), hexToRGB('#AA55FF')],
-
-    R2G2B1: [hexToRGB('#555500'), hexToRGB('#AAAA55')],
-    R2G2B2: [hexToRGB('#555556'), hexToRGB('#AAAAAA')],
-    R2G2B3: [hexToRGB('#5555AB'), hexToRGB('#AAAAFF')],
-
-    R2G3B1: [hexToRGB('#55AA00'), hexToRGB('#55FF55')],
-    R2G3B2: [hexToRGB('#55AA56'), hexToRGB('#55FFAA')],
-    R2G3B3: [hexToRGB('#55AAAB'), hexToRGB('#55FFFF')],
-
-    R3G1B1: [hexToRGB('#AA0000'), hexToRGB('#FF5555')],
-    R3G1B2: [hexToRGB('#AA0056'), hexToRGB('#FF55AA')],
-    R3G1B3: [hexToRGB('#AA00AB'), hexToRGB('#FF55FF')],
-
-    R3G2B1: [hexToRGB('#AA5500'), hexToRGB('#AAAA55')],
-    R3G2B2: [hexToRGB('#AA5556'), hexToRGB('#AAAAAA')],
-    R3G2B3: [hexToRGB('#AA55AB'), hexToRGB('#AAAAFF')],
-
-    R3G3B1: [hexToRGB('#AAAA00'), hexToRGB('#FFFF55')],
-    R3G3B2: [hexToRGB('#AAAA56'), hexToRGB('#FFFFAA')],
-    R3G3B3: [hexToRGB('#AAAAAB'), hexToRGB('#FFFFFF')],
-  };
-
-  type ColorGroups = {
-    黒: ColorRangeKeys[];
-    青: ColorRangeKeys[];
-    緑: ColorRangeKeys[];
-    紫: ColorRangeKeys[];
-    灰色: ColorRangeKeys[];
-    赤: ColorRangeKeys[];
-    オレンジ: ColorRangeKeys[];
-    黄色: ColorRangeKeys[];
-    白: ColorRangeKeys[];
-  };
-
-  const colorGroups: ColorGroups = {
-    黒: ['R1G1B1', 'R1G1B2'],
-    青: ['R1G1B3', 'R1G1B2', 'R1G2B3', 'R1G3B3', 'R2G3B3'],
-    緑: ['R1G2B1', 'R1G2B2', 'R1G3B1', 'R1G3B2', 'R2G3B1', 'R2G3B2'],
-    紫: ['R2G1B1', 'R2G1B2', 'R2G1B3', 'R3G1B3', 'R3G2B3', 'R2G2B3'],
-    灰色: ['R2G2B1', 'R2G2B2'],
-    赤: ['R3G1B1', 'R3G1B2', 'R2G1B1', 'R2G1B2'],
-    オレンジ: ['R3G2B1', 'R3G2B2'],
-    黄色: ['R3G3B1', 'R3G3B2'],
-    白: ['R3G3B2', 'R3G3B3'],
-  };
-
-  const fetchPalettes = async (colorGroups: RGBModel[][], type: 'color' | 'number' | 'with') => {
-    const fetchedPalettes = await apiClient.item.$post({
-      body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
+    window.addEventListener('scroll', () => {
+      console.log('Direct scroll listener: ', window.scrollY);
     });
-    console.log(fetchedPalettes);
 
-    if (Array.isArray(fetchedPalettes)) {
-      setPalettes(fetchedPalettes);
-    } else {
-      setPalettes([]);
+    // あるいは
+
+    document.addEventListener('scroll', () => {
+      console.log('Direct scroll listener on document: ', window.scrollY);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('useEffect for .mainContent scroll is running');
+    const mainContent = document.querySelector('.mainContent') as HTMLElement | null;
+
+    if (!mainContent) {
+      return;
     }
 
-    return fetchedPalettes;
-  };
+    const handleScroll = () => {
+      console.log('Scroll detected on .mainContent:', mainContent.scrollTop);
+    };
 
-  const handleFetch = () => {
-    const rangesToSend = selectedColors.flatMap((colorKey) =>
-      colorGroups[colorKey].map((key) => colorRanges[key])
-    );
+    mainContent.addEventListener('scroll', handleScroll);
 
-    const hasNumbers = selectedNumbers.length > 0;
-    const hasColors = selectedColors.length > 0;
+    return () => {
+      mainContent.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
-    let type: 'color' | 'number' | 'with';
+  useEffect(() => {
+    const handleClick = () => {
+      console.log('Page was clicked!');
+    };
 
-    if (hasNumbers && hasColors) {
-      type = 'with';
-    } else if (hasNumbers) {
-      type = 'number';
-    } else {
-      type = 'color';
-    }
+    window.addEventListener('click', handleClick);
 
-    fetchPalettes(rangesToSend, type);
-  };
-
-  const handleColorChange = (color: ColorKey) => {
-    setSelectedColors((prev) =>
-      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
-    );
-  };
-
-  const handleNumberChange = (num: number) => {
-    setSelectedNumbers((prev) =>
-      prev.includes(num) ? prev.filter((n) => n !== num) : [...prev, num]
-    );
-  };
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
 
   useEffect(() => {
     const start = Date.now();
@@ -182,19 +106,20 @@ const PaletteListPage = () => {
     };
 
     animateCount();
-  }, [palettes.length]);
+  }, [palettes.length, setCurrentCount]);
 
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.targetCount}>
           <span>対象パレット</span>
-          <span>{currentCount}件</span>
+          <div>
+            <span className={styles.currentCount}>{currentCount}</span>
+            <span className={styles.countLabel}>件</span>
+          </div>
         </div>
-
         <div className={styles.paletteNumbers}>
           <div className={styles.subtitle}>パレット数</div>
-
           {[4, 5, 6].map((num) => (
             <div key={num} className={styles.option}>
               <input
@@ -206,10 +131,8 @@ const PaletteListPage = () => {
             </div>
           ))}
         </div>
-
         <div className={styles.paletteColors}>
           <div className={styles.subtitle}>カラー</div>
-
           {Object.keys(colorGroups).map((color) => (
             <div key={color} className={styles.option}>
               <input
@@ -221,10 +144,8 @@ const PaletteListPage = () => {
             </div>
           ))}
         </div>
-
         <button onClick={handleFetch}>パレットを取得</button>
       </div>
-
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
