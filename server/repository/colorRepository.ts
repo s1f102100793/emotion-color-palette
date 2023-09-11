@@ -42,24 +42,19 @@ const rgbToHex = (rgb: { rStr: number; gStr: number; bStr: number }): string => 
 };
 
 export const getItemsFromNumber = async (paletteSize: number) => {
-  try {
-    console.log(paletteSize);
-    const prismaColor = await prismaClient.color.findMany({
-      where: { paletteSize },
-      select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
-    });
+  console.log(paletteSize);
+  const prismaColor = await prismaClient.color.findMany({
+    where: { paletteSize },
+    select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
+  });
 
-    return prismaColor.map((colorItem) => {
-      const parsedColors = JSON.parse(colorItem.color as string);
-      return {
-        ...colorItem,
-        color: parsedColors.map(rgbToHex),
-      };
-    });
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
+  return prismaColor.map((colorItem) => {
+    const parsedColors = JSON.parse(colorItem.color as string);
+    return {
+      ...colorItem,
+      color: parsedColors.map(rgbToHex),
+    };
+  });
 };
 
 // eslint-disable-next-line complexity

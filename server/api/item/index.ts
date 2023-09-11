@@ -1,5 +1,5 @@
 import type { DefineMethods } from 'aspida';
-import type { ColorModel, RGBModel } from '../../commonTypesWithClient/models';
+import type { RGBModel, ReturnColorModel } from '../../commonTypesWithClient/models';
 
 export type Methods = DefineMethods<{
   get: {
@@ -7,6 +7,6 @@ export type Methods = DefineMethods<{
   };
   post: {
     reqBody: { type: string; numberlist: number[]; colorlist: RGBModel[][] };
-    resBody: ColorModel[] | undefined;
+    resBody: ReturnColorModel[] | undefined;
   };
 }>;

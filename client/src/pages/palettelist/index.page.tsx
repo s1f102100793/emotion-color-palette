@@ -1,4 +1,4 @@
-import type { ColorModel, RGBModel } from 'commonTypesWithClient/models';
+import type { RGBModel, ReturnColorModel } from 'commonTypesWithClient/models';
 import { useEffect, useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
@@ -7,7 +7,7 @@ type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ
 const PaletteListPage = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
-  const [palettes, setPalettes] = useState<ColorModel[]>([]);
+  const [palettes, setPalettes] = useState<ReturnColorModel[]>([]);
   const [currentCount, setCurrentCount] = useState(0);
 
   const hexToRGB = (hex: string): RGBModel => {
@@ -229,7 +229,7 @@ const PaletteListPage = () => {
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
             <div className={styles.colorBox}>
-              {palette.color.map((color: RGBModel, idx: number) => (
+              {palette.color.map((color: string, idx: number) => (
                 <div key={idx} className={styles.color} style={{ background: color }} />
               ))}
             </div>
