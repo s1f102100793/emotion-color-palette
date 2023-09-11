@@ -34,14 +34,11 @@ export const getItems = async (type: string, numberlist: number[], colorlist: nu
   }
 };
 
-export const decimalToHex = (decimal: number): string => {
-  const r = (decimal >> 16) & 255;
-  const g = (decimal >> 8) & 255;
-  const b = decimal & 255;
-
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b
-    .toString(16)
-    .padStart(2, '0')}`;
+const rgbToHex = (rgb: { rStr: number; gStr: number; bStr: number }): string => {
+  const r = rgb.rStr.toString(16).padStart(2, '0');
+  const g = rgb.gStr.toString(16).padStart(2, '0');
+  const b = rgb.bStr.toString(16).padStart(2, '0');
+  return `#${r}${g}${b}`;
 };
 
 export const getItemsFromNumber = async (paletteSize: number) => {
@@ -52,7 +49,13 @@ export const getItemsFromNumber = async (paletteSize: number) => {
       select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
     });
 
-    return prismaColor.map(toColorModel);
+    return prismaColor.map((colorItem) => {
+      const parsedColors = JSON.parse(colorItem.color as string); // JSON文字列をオブジェクトに変換
+      return {
+        ...colorItem,
+        color: parsedColors.map(rgbToHex), // RGBを16進数に変換
+      };
+    });
   } catch (e) {
     console.log(e);
     return [];
