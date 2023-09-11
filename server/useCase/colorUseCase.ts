@@ -77,14 +77,24 @@ const RGBModelSchema = z.object({
   bStr: z.number(),
 });
 
-export const toColorModel = (prismaColor: Color): ColorModel => ({
-  id: prismaColor.id,
-  createdAt: prismaColor.createdAt,
-  txet: prismaColor.txet,
-  paletteSize: prismaColor.paletteSize,
-  color: z.array(RGBModelSchema).parse(prismaColor.color),
-  like: prismaColor.like,
-});
+export const toColorModel = (prismaColor: Color): ColorModel => {
+  let parsedColor;
+
+  if (typeof prismaColor.color === 'string') {
+    parsedColor = JSON.parse(prismaColor.color);
+  } else {
+    parsedColor = prismaColor.color;
+  }
+
+  return {
+    id: prismaColor.id,
+    createdAt: prismaColor.createdAt,
+    text: prismaColor.text,
+    paletteSize: prismaColor.paletteSize,
+    color: z.array(RGBModelSchema).parse(parsedColor),
+    like: prismaColor.like,
+  };
+};
 
 const hexToDecimal = (hex: string): number => {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -127,7 +137,7 @@ const rgbModelToDecimal = (rgb: RGBModel): number => {
 
 export const createColordb = async (
   id: ColorModel['id'] | undefined,
-  txet: ColorModel['txet'],
+  text: ColorModel['text'],
   paletteSize: ColorModel['paletteSize'],
   color: RGBModel[],
   like: ColorModel['like']
@@ -142,7 +152,7 @@ export const createColordb = async (
       where: { id },
       data: {
         like,
-        txet,
+        text,
         paletteSize,
         color: colorJson,
       },
@@ -150,7 +160,7 @@ export const createColordb = async (
   } else {
     prismaColor = await prismaClient.color.create({
       data: {
-        txet,
+        text,
         paletteSize,
         color: colorJson,
         like,

@@ -228,11 +228,11 @@ const PaletteListPage = () => {
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
             <div className={styles.colorBox}>
-              {palette.color.map((color: string, idx: number) => (
+              {/* {palette.color.map((color: string, idx: number) => (
                 <div key={idx} className={styles.color} style={{ background: color }} />
-              ))}
+              ))} */}
             </div>
-            <h3>{palette.txet}</h3>
+            <h3>{palette.text}</h3>
             <div className={styles.info}>
               <div>Like: {/* ここにlike数を入れる */}</div>
               <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>

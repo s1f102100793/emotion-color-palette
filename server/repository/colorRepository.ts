@@ -49,7 +49,7 @@ export const getItemsFromNumber = async (paletteSize: number) => {
     console.log(paletteSize);
     const prismaColor = await prismaClient.color.findMany({
       where: { paletteSize },
-      select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
+      select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
     });
 
     return prismaColor.map(toColorModel);
@@ -61,7 +61,7 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 
 export const getItemsFromColor = async (ranges: number[][]) => {
   const allColors = await prismaClient.color.findMany({
-    select: { id: true, createdAt: true, txet: true, paletteSize: true, color: true, like: true },
+    select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
   });
 
   const filteredColors = allColors.filter((item) =>
