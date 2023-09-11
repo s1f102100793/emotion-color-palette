@@ -72,3 +72,15 @@ export type ColorRanges = {
 };
 
 export type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';
+
+export type ColorGroups = {
+  黒: ColorRangeKeys[];
+  青: ColorRangeKeys[];
+  緑: ColorRangeKeys[];
+  紫: ColorRangeKeys[];
+  灰色: ColorRangeKeys[];
+  赤: ColorRangeKeys[];
+  オレンジ: ColorRangeKeys[];
+  黄色: ColorRangeKeys[];
+  白: ColorRangeKeys[];
+};
