@@ -41,16 +41,6 @@ const PaletteListPage = () => {
     animateCount();
   }, [palettes.length, setCurrentCount]);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     fetchPalettes(rangesToSend, currentType);
-  //   }, 100);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [fetchPalettes, rangesToSend, currentType]);
-
   // eslint-disable-next-line complexity
   const rgbToHSV = (rInput: number, gInput: number, bInput: number): HSVModel => {
     const r = rInput / 255;
@@ -107,7 +97,6 @@ const PaletteListPage = () => {
       },
     });
 
-    // 状態も更新する
     setPalettes((prev) =>
       prev.map((p) => {
         if (p.id === palette.id) {
@@ -116,6 +105,46 @@ const PaletteListPage = () => {
         return p;
       })
     );
+  };
+
+  // eslint-disable-next-line complexity
+  const timeSince = (date: Date) => {
+    const now = new Date();
+    const secondsPast = (now.getTime() - date.getTime()) / 1000;
+
+    if (secondsPast < 60) {
+      return 'Just now';
+    }
+
+    if (secondsPast < 3600) {
+      return `${Math.round(secondsPast / 60)} minutes ago`;
+    }
+
+    if (secondsPast <= 86400) {
+      return 'Today';
+    }
+
+    const daysPast = Math.round(secondsPast / 86400);
+    if (daysPast === 1) {
+      return '1 day ago';
+    }
+    if (daysPast < 30) {
+      return `${daysPast} days ago`;
+    }
+
+    const monthsPast = Math.round(daysPast / 30);
+    if (monthsPast === 1) {
+      return '1 month ago';
+    }
+    if (monthsPast < 12) {
+      return `${monthsPast} months ago`;
+    }
+
+    const yearsPast = Math.round(monthsPast / 12);
+    if (yearsPast === 1) {
+      return '1 year ago';
+    }
+    return `${yearsPast} years ago`;
   };
 
   return (
@@ -172,7 +201,7 @@ const PaletteListPage = () => {
               <div>
                 <span onClick={() => handleLikeClick(palette)}>❤️ {palette.like}</span>
               </div>
-              <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>
+              <div>{timeSince(new Date(palette.createdAt))}</div>
             </div>
           </div>
         ))}
