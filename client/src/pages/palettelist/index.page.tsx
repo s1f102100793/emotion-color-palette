@@ -147,6 +147,21 @@ const PaletteListPage = () => {
     return `${yearsPast} years ago`;
   };
 
+  const getTextColor = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    if (luminance > 0.7) {
+      return '#000'; // 黒
+    } else if (luminance > 0.4) {
+      return '#777'; // 灰色
+    } else {
+      return '#fff'; // 白
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.leftsidebar}>
@@ -193,7 +208,12 @@ const PaletteListPage = () => {
           <div key={palette.id} className={styles.paletteItem}>
             <div className={styles.colorBox}>
               {palette.color.map((color: string, idx: number) => (
-                <div key={idx} className={styles.color} style={{ background: color }} />
+                <div
+                  key={idx}
+                  className={styles.color}
+                  style={{ background: color, color: getTextColor(color) }}
+                  data-color={color}
+                />
               ))}
             </div>
             <h3>{palette.text}</h3>

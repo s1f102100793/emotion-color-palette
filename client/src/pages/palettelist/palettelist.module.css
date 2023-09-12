@@ -144,8 +144,21 @@
 }
 
 .paletteItem .colorBox .color {
+  position: relative;
   flex: 1;
   height: 100%;
+  transition: flex 0.3s;
+}
+
+.paletteItem .colorBox .color:hover::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 2px 5px;
+  font-weight: bold;
+  content: attr(data-color);
+  border-radius: 3px;
+  transform: translate(-50%, -50%);
 }
 
 .paletteItem .colorBox .color:first-child {
@@ -166,4 +179,9 @@
 
 .paletteItem h3 {
   margin-top: 10px;
+}
+
+.paletteItem .colorBox .color:hover {
+  flex: 4;
+  transition: flex 0.1s;
 }
