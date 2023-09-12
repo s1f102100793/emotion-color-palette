@@ -111,14 +111,14 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 };
 
 // eslint-disable-next-line complexity
-const isColorInRange = (color: RGBModel, startRange: RGBModel, endRange: RGBModel): boolean => {
+const isColorInRangeHSV = (color: HSVModel, range: HSVRange): boolean => {
   return (
-    color.rStr >= startRange.rStr &&
-    color.rStr <= endRange.rStr &&
-    color.gStr >= startRange.gStr &&
-    color.gStr <= endRange.gStr &&
-    color.bStr >= startRange.bStr &&
-    color.bStr <= endRange.bStr
+    color.h >= range.hue[0] &&
+    color.h <= range.hue[1] &&
+    color.s >= range.saturation[0] &&
+    color.s <= range.saturation[1] &&
+    color.v >= range.value[0] &&
+    color.v <= range.value[1]
   );
 };
 
@@ -128,17 +128,22 @@ export const getItemsFromColor = async (ranges: HSVRange[]) => {
   });
 
   const result = allColors.filter((item) => {
-    const parsedColors = JSON.parse(item.color as string) as RGBModel[];
-    return parsedColors.some((colorValue) =>
-      ranges.some(([startRange, endRange]) => isColorInRange(colorValue, startRange, endRange))
-    );
+    const parsedColors: HSVModel[][] =
+      typeof item.color === 'string' ? JSON.parse(item.color) : item.color;
+
+    return parsedColors.some((colorGroup) => {
+      // eslint-disable-next-line max-nested-callbacks
+      return colorGroup.some((color) => ranges.some((range) => isColorInRangeHSV(color, range)));
+    });
   });
 
   return result.map((colorItem) => {
-    const parsedColors = JSON.parse(colorItem.color as string) as RGBModel[];
+    const parsedColors: HSVModel[] =
+      typeof colorItem.color === 'string' ? JSON.parse(colorItem.color) : colorItem.color;
+    const hexColors = parsedColors.map(hsvToHex);
     return {
       ...colorItem,
-      color: parsedColors.map(rgbToHex),
+      color: hexColors,
     };
   });
 };

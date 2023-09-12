@@ -71,10 +71,10 @@ export const makeColor = async (txet: string, number: number, id: number | undef
   }
 };
 
-const RGBModelSchema = z.object({
-  rStr: z.number(),
-  gStr: z.number(),
-  bStr: z.number(),
+const HSVModelSchema = z.object({
+  h: z.number(),
+  s: z.number(),
+  v: z.number(),
 });
 
 export const toColorModel = (prismaColor: Color): ColorModel => {
@@ -91,7 +91,7 @@ export const toColorModel = (prismaColor: Color): ColorModel => {
     createdAt: prismaColor.createdAt,
     text: prismaColor.text,
     paletteSize: prismaColor.paletteSize,
-    color: z.array(RGBModelSchema).parse(parsedColor),
+    color: z.array(HSVModelSchema).parse(parsedColor),
     like: prismaColor.like,
   };
 };

@@ -19,7 +19,7 @@ export type ColorModel = {
   createdAt: Date;
   text: string;
   paletteSize: number;
-  color: RGBModel[];
+  color: HSVModel[];
   like: number;
 };
 
