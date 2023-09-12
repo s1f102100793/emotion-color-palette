@@ -7,7 +7,7 @@ import styles from './index.module.css';
 const Home = () => {
   const [inputValue, setInputValue] = useState('');
   const [colors, setColors] = useState<string[]>([]);
-  const [selectedValue, setSelectedValue] = useState<number>(4);
+  // const [selectedValue, setSelectedValue] = useState<number>(4);
   const [loading, setLoading] = useState(false);
 
   const loadingText = '作成中...';
@@ -36,6 +36,33 @@ const Home = () => {
     setSelectedValue(valueAsNumber);
     console.log('選択された値:', event.target.value);
   };
+
+  const [index, setIndex] = useState(0);
+  const [selectedValue, setSelectedValue] = useState(4);
+
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     try {
+  //       if (index < phrases.length) {
+  //         const res = await apiClient.color.$post({
+  //           body: { text: phrases[index], number: selectedValue },
+  //         });
+
+  //         // selectedValueを更新 (4 -> 5 -> 6 -> 4 ...)
+  //         setSelectedValue((prev) => (prev === 6 ? 4 : prev + 1));
+
+  //         setIndex((prev) => prev + 1);
+  //       } else {
+  //         clearInterval(interval);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       clearInterval(interval);
+  //     }
+  //   }, 5000); // 0.1秒ごとにリクエストを送信
+
+  //   return () => clearInterval(interval); // コンポーネントのアンマウント時にintervalをクリア
+  // }, [index, selectedValue]);
 
   const handleSubmit = async () => {
     setColors([]);
