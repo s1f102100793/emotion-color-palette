@@ -84,11 +84,14 @@ const PaletteListPage = () => {
                 checked={selectedColors.includes(color as ColorKey)}
                 onChange={() => handleColorChange(color as ColorKey)}
               />
+              <span className={styles.colorDisplay} style={{ backgroundColor: color }} />
               <label>{color}</label>
             </div>
           ))}
         </div>
-        <button onClick={handleFetch}>パレットを取得</button>
+        <button className={styles.fetchbutton} onClick={handleFetch}>
+          パレットを取得
+        </button>
       </div>
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
