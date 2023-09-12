@@ -42,27 +42,31 @@ export const getItems = async (
 
 // eslint-disable-next-line complexity
 const hsvToRGB = (h: number, s: number, v: number): RGBModel => {
+  // 新しい変数に0-1の範囲で値を保持
+  const sNorm = s / 100;
+  const vNorm = v / 100;
+
   const i = Math.floor(h / 60);
   const f = h / 60 - i;
-  const p = v * (1 - s);
-  const q = v * (1 - s * f);
-  const t = v * (1 - s * (1 - f));
+  const p = vNorm * (1 - sNorm);
+  const q = vNorm * (1 - sNorm * f);
+  const t = vNorm * (1 - sNorm * (1 - f));
 
   const round = (num: number) => Math.round(num * 255);
 
   switch (i % 6) {
     case 0:
-      return { rStr: round(v), gStr: round(t), bStr: round(p) };
+      return { rStr: round(vNorm), gStr: round(t), bStr: round(p) };
     case 1:
-      return { rStr: round(q), gStr: round(v), bStr: round(p) };
+      return { rStr: round(q), gStr: round(vNorm), bStr: round(p) };
     case 2:
-      return { rStr: round(p), gStr: round(v), bStr: round(t) };
+      return { rStr: round(p), gStr: round(vNorm), bStr: round(t) };
     case 3:
-      return { rStr: round(p), gStr: round(q), bStr: round(v) };
+      return { rStr: round(p), gStr: round(q), bStr: round(vNorm) };
     case 4:
-      return { rStr: round(t), gStr: round(p), bStr: round(v) };
+      return { rStr: round(t), gStr: round(p), bStr: round(vNorm) };
     case 5:
-      return { rStr: round(v), gStr: round(p), bStr: round(q) };
+      return { rStr: round(vNorm), gStr: round(p), bStr: round(q) };
     default:
       throw new Error('Unexpected value in hsvToRGB conversion.');
   }
@@ -79,6 +83,7 @@ const rgbToHex = (r: number, g: number, b: number) => {
 
 const hsvToHex = (hsv: HSVModel): string => {
   const rgb = hsvToRGB(hsv.h, hsv.s, hsv.v);
+  console.log('rgb:', rgb);
   return rgbToHex(rgb.rStr, rgb.gStr, rgb.bStr);
 };
 
@@ -123,6 +128,7 @@ export const getItemsFromColor = async (ranges: RGBModel[][]) => {
       ranges.some(([startRange, endRange]) => isColorInRange(colorValue, startRange, endRange))
     );
   });
+
 
   return result.map((colorItem) => {
     const parsedColors = JSON.parse(colorItem.color as string) as RGBModel[];
