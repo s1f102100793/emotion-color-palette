@@ -29,6 +29,12 @@ export type RGBModel = {
   bStr: number;
 };
 
+export type HSVModel = {
+  h: number;
+  s: number;
+  v: number;
+};
+
 export type ReturnColorModel = {
   id: number;
   createdAt: Date;
