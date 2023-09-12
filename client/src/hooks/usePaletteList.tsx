@@ -14,18 +14,16 @@ export const usePaletteList = () => {
   const [currentCount, setCurrentCount] = useState(0);
 
   const colorRanges: ColorRanges = {
-    赤: { hue: [0, 30], saturation: [33, 100], value: [33, 100] },
-    橙: { hue: [30, 60], saturation: [33, 100], value: [33, 100] },
-    黄: { hue: [60, 90], saturation: [33, 100], value: [33, 100] },
-    黄緑: { hue: [90, 150], saturation: [33, 100], value: [33, 100] },
-    緑: { hue: [150, 210], saturation: [33, 100], value: [33, 100] },
-    青緑: { hue: [210, 240], saturation: [33, 100], value: [33, 100] },
-    青: { hue: [240, 270], saturation: [33, 100], value: [33, 100] },
-    紫: { hue: [270, 300], saturation: [33, 100], value: [33, 100] },
-    ピンク: { hue: [300, 330], saturation: [33, 100], value: [33, 100] },
-    紅: { hue: [330, 360], saturation: [33, 100], value: [33, 100] },
+    赤: { hue: [330, 30], saturation: [33, 100], value: [33, 100] },
+    橙: { hue: [0, 60], saturation: [33, 100], value: [33, 100] },
+    黄: { hue: [45, 75], saturation: [33, 100], value: [33, 100] },
+    緑: { hue: [75, 165], saturation: [33, 100], value: [33, 100] },
+    水色: { hue: [165, 195], saturation: [33, 100], value: [33, 100] },
+    青: { hue: [195, 255], saturation: [33, 100], value: [33, 100] },
+    紫: { hue: [250, 290], saturation: [33, 100], value: [33, 100] },
+    ピンク: { hue: [285, 315], saturation: [33, 100], value: [33, 100] },
     茶: { hue: [0, 30], saturation: [33, 66], value: [33, 66] },
-    黒: { hue: [0, 360], saturation: [0, 100], value: [0, 33] },
+    黒: { hue: [330, 360], saturation: [0, 100], value: [0, 33] },
     白: { hue: [0, 360], saturation: [0, 33], value: [66, 100] },
   };
 

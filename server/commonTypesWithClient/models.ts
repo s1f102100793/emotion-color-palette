@@ -93,12 +93,10 @@ export type ColorGroups = {
 
 export type ColorKey =
   | '赤'
-  | '紅'
   | '橙'
   | '黄'
-  | '黄緑'
   | '緑'
-  | '青緑'
+  | '水色'
   | '青'
   | '紫'
   | 'ピンク'
