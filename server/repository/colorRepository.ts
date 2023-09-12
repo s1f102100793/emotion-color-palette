@@ -12,37 +12,41 @@ export const getItems = async (
   numberlist: number[],
   colorlist: HSVRange[]
 ): Promise<ReturnColorModel[]> => {
-  switch (type) {
-    case 'number':
-      if (Array.isArray(numberlist)) {
-        const results = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
-        return results.flatMap((item) => item);
-      }
-      break;
-    case 'color':
-      if (Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
-        return await getItemsFromColor(colorlist as HSVRange[]);
-      }
-      break;
-    case 'with':
-      if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
-        const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+  try {
+    console.log(colorlist);
+    switch (type) {
+      case 'number':
+        if (Array.isArray(numberlist)) {
+          const results = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
+          return results.flatMap((item) => item);
+        }
+        break;
+      case 'color':
+        return await getItemsFromColor(colorlist);
+        break;
+      case 'with':
+        if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
+          const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
 
-        const colorItems = await getItemsFromColor(colorlist as HSVRange[]);
+          const colorItems = await getItemsFromColor(colorlist as HSVRange[]);
 
-        const flattenedNumberItems = numberItems.flatMap((item) => item);
+          const flattenedNumberItems = numberItems.flatMap((item) => item);
 
-        return flattenedNumberItems.filter(
-          (numberItem) =>
-            numberItem !== undefined &&
-            colorItems.some((colorItem) => colorItem.id === numberItem.id)
-        );
-      }
-      break;
-    default:
-      throw new Error('Invalid type provided.');
+          return flattenedNumberItems.filter(
+            (numberItem) =>
+              numberItem !== undefined &&
+              colorItems.some((colorItem) => colorItem.id === numberItem.id)
+          );
+        }
+        break;
+      default:
+        throw new Error('Invalid type provided.');
+    }
+    return [];
+  } catch (e) {
+    console.log(e);
+    return [];
   }
-  return [];
 };
 
 // eslint-disable-next-line complexity
@@ -123,18 +127,16 @@ const isColorInRangeHSV = (color: HSVModel, range: HSVRange): boolean => {
 };
 
 export const getItemsFromColor = async (ranges: HSVRange[]) => {
+  console.log('aaaaa');
+  console.log('ranges:', ranges);
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
   });
 
   const result = allColors.filter((item) => {
-    const parsedColors: HSVModel[][] =
+    const parsedColors: HSVModel[] =
       typeof item.color === 'string' ? JSON.parse(item.color) : item.color;
-
-    return parsedColors.some((colorGroup) => {
-      // eslint-disable-next-line max-nested-callbacks
-      return colorGroup.some((color) => ranges.some((range) => isColorInRangeHSV(color, range)));
-    });
+    return parsedColors.some((color) => ranges.some((range) => isColorInRangeHSV(color, range)));
   });
 
   return result.map((colorItem) => {
