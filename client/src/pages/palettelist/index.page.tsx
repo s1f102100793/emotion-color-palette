@@ -111,15 +111,15 @@ const PaletteListPage = () => {
     animateCount();
   }, [palettes.length, setCurrentCount]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchPalettes(rangesToSend, currentType);
-    }, 100);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetchPalettes(rangesToSend, currentType);
+  //   }, 100);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [fetchPalettes, rangesToSend, currentType]);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [fetchPalettes, rangesToSend, currentType]);
 
   return (
     <div className={styles.container}>

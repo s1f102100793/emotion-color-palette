@@ -73,6 +73,7 @@ export const usePaletteList = () => {
   };
 
   const fetchPalettes = async (colorGroups: RGBModel[][], type: 'color' | 'number' | 'with') => {
+    console.log(type);
     const fetchedPalettes = await apiClient.item.$post({
       body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
     });
@@ -108,8 +109,7 @@ export const usePaletteList = () => {
       type = 'color';
     }
 
-    setRangesToSend(rangesToSend);
-    setCurrentType(type);
+    fetchPalettes(rangesToSend, type);
   };
 
   const handleColorChange = (color: ColorKey) => {
