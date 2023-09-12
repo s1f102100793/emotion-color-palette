@@ -10,7 +10,7 @@ const PaletteListPage = () => {
     palettes,
     currentCount,
     setCurrentCount,
-    colorGroups,
+    colorRanges,
     fetchPalettes,
     handleColorChange,
     handleNumberChange,
@@ -77,7 +77,7 @@ const PaletteListPage = () => {
         </div>
         <div className={styles.paletteColors}>
           <div className={styles.subtitle}>カラー</div>
-          {Object.keys(colorGroups).map((color) => (
+          {Object.keys(colorRanges).map((color) => (
             <div key={color} className={styles.option}>
               <input
                 type="checkbox"

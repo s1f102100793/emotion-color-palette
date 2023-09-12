@@ -1,11 +1,16 @@
-import type { HSVModel, RGBModel, ReturnColorModel } from '$/commonTypesWithClient/models';
+import type {
+  HSVModel,
+  HSVRange,
+  RGBModel,
+  ReturnColorModel,
+} from '$/commonTypesWithClient/models';
 import { prismaClient } from '$/service/prismaClient';
 
 // eslint-disable-next-line complexity
 export const getItems = async (
   type: string,
   numberlist: number[],
-  colorlist: RGBModel[][]
+  colorlist: HSVRange[]
 ): Promise<ReturnColorModel[]> => {
   switch (type) {
     case 'number':
@@ -16,14 +21,14 @@ export const getItems = async (
       break;
     case 'color':
       if (Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
-        return await getItemsFromColor(colorlist as RGBModel[][]);
+        return await getItemsFromColor(colorlist as HSVRange[]);
       }
       break;
     case 'with':
       if (Array.isArray(numberlist) && Array.isArray(colorlist) && Array.isArray(colorlist[0])) {
         const numberItems = await Promise.all(numberlist.map((num) => getItemsFromNumber(num)));
 
-        const colorItems = await getItemsFromColor(colorlist as RGBModel[][]);
+        const colorItems = await getItemsFromColor(colorlist as HSVRange[]);
 
         const flattenedNumberItems = numberItems.flatMap((item) => item);
 
@@ -117,7 +122,7 @@ const isColorInRange = (color: RGBModel, startRange: RGBModel, endRange: RGBMode
   );
 };
 
-export const getItemsFromColor = async (ranges: RGBModel[][]) => {
+export const getItemsFromColor = async (ranges: HSVRange[]) => {
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
   });
@@ -128,7 +133,6 @@ export const getItemsFromColor = async (ranges: RGBModel[][]) => {
       ranges.some(([startRange, endRange]) => isColorInRange(colorValue, startRange, endRange))
     );
   });
-
 
   return result.map((colorItem) => {
     const parsedColors = JSON.parse(colorItem.color as string) as RGBModel[];

@@ -73,11 +73,11 @@ export type ColorRangeKeys =
   | 'R3G3B2'
   | 'R3G3B3';
 
-export type ColorRanges = {
-  [key in ColorRangeKeys]: RGBModel[];
-};
+// export type ColorRanges = {
+//   [key in ColorRangeKeys]: RGBModel[];
+// };
 
-export type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';
+// export type ColorKey = '黒' | '青' | '緑' | '紫' | '灰色' | '赤' | 'オレンジ' | '黄色' | '白';
 
 export type ColorGroups = {
   黒: ColorRangeKeys[];
@@ -89,4 +89,29 @@ export type ColorGroups = {
   オレンジ: ColorRangeKeys[];
   黄色: ColorRangeKeys[];
   白: ColorRangeKeys[];
+};
+
+export type ColorKey =
+  | '赤'
+  | '紅'
+  | '橙'
+  | '黄'
+  | '黄緑'
+  | '緑'
+  | '青緑'
+  | '青'
+  | '紫'
+  | 'ピンク'
+  | '茶'
+  | '白'
+  | '黒';
+
+export type HSVRange = {
+  hue: [number, number];
+  saturation: [number, number];
+  value: [number, number];
+};
+
+export type ColorRanges = {
+  [key in ColorKey]: HSVRange;
 };
