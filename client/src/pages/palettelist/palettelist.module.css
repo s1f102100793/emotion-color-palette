@@ -68,6 +68,8 @@
 }
 
 .option {
+  position: relative;
+  left: 10%;
   display: flex;
   align-items: center;
   margin-top: 10px;

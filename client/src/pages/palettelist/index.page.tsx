@@ -1,6 +1,7 @@
-import type { ColorKey } from 'commonTypesWithClient/models';
+import type { ColorKey, HSVModel, ReturnColorModel } from 'commonTypesWithClient/models';
 import { useEffect } from 'react';
 import { usePaletteList } from 'src/hooks/usePaletteList';
+import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
 
 const PaletteListPage = () => {
@@ -8,15 +9,13 @@ const PaletteListPage = () => {
     selectedColors,
     selectedNumbers,
     palettes,
+    setPalettes,
     currentCount,
     setCurrentCount,
     colorRanges,
-    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
-    rangesToSend,
-    currentType,
   } = usePaletteList();
 
   useEffect(() => {
@@ -51,6 +50,73 @@ const PaletteListPage = () => {
   //     clearInterval(intervalId);
   //   };
   // }, [fetchPalettes, rangesToSend, currentType]);
+
+  // eslint-disable-next-line complexity
+  const rgbToHSV = (rInput: number, gInput: number, bInput: number): HSVModel => {
+    const r = rInput / 255;
+    const g = gInput / 255;
+    const b = bInput / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+
+    let h = 0;
+    const d = max - min;
+    const s = max === 0 ? 0 : d / max;
+
+    if (max !== min) {
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h /= 6;
+    }
+
+    const v = max;
+
+    return { h: h * 360, s: s * 100, v: v * 100 };
+  };
+
+  const hexToHSVModel = (hex: string): HSVModel => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    return rgbToHSV(r, g, b);
+  };
+
+  const handleLikeClick = async (palette: ReturnColorModel) => {
+    const newLike = palette.like + 1;
+
+    const newColors = palette.color.map((color) => hexToHSVModel(color));
+
+    await apiClient.like.$post({
+      body: {
+        id: palette.id,
+        text: palette.text,
+        paletteSize: palette.paletteSize,
+        color: newColors,
+        like: newLike,
+      },
+    });
+
+    // 状態も更新する
+    setPalettes((prev) =>
+      prev.map((p) => {
+        if (p.id === palette.id) {
+          return { ...p, like: newLike };
+        }
+        return p;
+      })
+    );
+  };
 
   return (
     <div className={styles.container}>
@@ -103,7 +169,9 @@ const PaletteListPage = () => {
             </div>
             <h3>{palette.text}</h3>
             <div className={styles.info}>
-              <div>Like: {/* ここにlike数を入れる */}</div>
+              <div>
+                <span onClick={() => handleLikeClick(palette)}>❤️ {palette.like}</span>
+              </div>
               <div>Created At: {new Date(palette.createdAt).toLocaleString()}</div>
             </div>
           </div>
