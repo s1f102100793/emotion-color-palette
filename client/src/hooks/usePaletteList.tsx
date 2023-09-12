@@ -1,8 +1,7 @@
 import type {
-  ColorGroups,
   ColorKey,
   ColorRanges,
-  RGBModel,
+  HSVRange,
   ReturnColorModel,
 } from 'commonTypesWithClient/models';
 import { useState } from 'react';
@@ -10,69 +9,28 @@ import { apiClient } from 'src/utils/apiClient';
 
 export const usePaletteList = () => {
   const [selectedColors, setSelectedColors] = useState<ColorKey[]>([]);
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([4, 5, 6]);
   const [palettes, setPalettes] = useState<ReturnColorModel[]>([]);
   const [currentCount, setCurrentCount] = useState(0);
 
-  const hexToRGB = (hex: string): RGBModel => {
-    return {
-      rStr: parseInt(hex.slice(1, 3), 16),
-      gStr: parseInt(hex.slice(3, 5), 16),
-      bStr: parseInt(hex.slice(5, 7), 16),
-    };
-  };
-
   const colorRanges: ColorRanges = {
-    R1G1B1: [hexToRGB('#000000'), hexToRGB('#555555')],
-    R1G1B2: [hexToRGB('#000056'), hexToRGB('#5555AA')],
-    R1G1B3: [hexToRGB('#0000AB'), hexToRGB('#5555FF')],
-
-    R1G2B1: [hexToRGB('#005500'), hexToRGB('#55AA55')],
-    R1G2B2: [hexToRGB('#005556'), hexToRGB('#55AAAA')],
-    R1G2B3: [hexToRGB('#0055AB'), hexToRGB('#55AAFF')],
-
-    R1G3B1: [hexToRGB('#00AA00'), hexToRGB('#00FF55')],
-    R1G3B2: [hexToRGB('#00AA56'), hexToRGB('#00FFAA')],
-    R1G3B3: [hexToRGB('#00AAAB'), hexToRGB('#00FFFF')],
-
-    R2G1B1: [hexToRGB('#550000'), hexToRGB('#AA5555')],
-    R2G1B2: [hexToRGB('#550056'), hexToRGB('#AA55AA')],
-    R2G1B3: [hexToRGB('#5500AB'), hexToRGB('#AA55FF')],
-
-    R2G2B1: [hexToRGB('#555500'), hexToRGB('#AAAA55')],
-    R2G2B2: [hexToRGB('#555556'), hexToRGB('#AAAAAA')],
-    R2G2B3: [hexToRGB('#5555AB'), hexToRGB('#AAAAFF')],
-
-    R2G3B1: [hexToRGB('#55AA00'), hexToRGB('#55FF55')],
-    R2G3B2: [hexToRGB('#55AA56'), hexToRGB('#55FFAA')],
-    R2G3B3: [hexToRGB('#55AAAB'), hexToRGB('#55FFFF')],
-
-    R3G1B1: [hexToRGB('#AA0000'), hexToRGB('#FF5555')],
-    R3G1B2: [hexToRGB('#AA0056'), hexToRGB('#FF55AA')],
-    R3G1B3: [hexToRGB('#AA00AB'), hexToRGB('#FF55FF')],
-
-    R3G2B1: [hexToRGB('#AA5500'), hexToRGB('#AAAA55')],
-    R3G2B2: [hexToRGB('#AA5556'), hexToRGB('#AAAAAA')],
-    R3G2B3: [hexToRGB('#AA55AB'), hexToRGB('#AAAAFF')],
-
-    R3G3B1: [hexToRGB('#AAAA00'), hexToRGB('#FFFF55')],
-    R3G3B2: [hexToRGB('#AAAA56'), hexToRGB('#FFFFAA')],
-    R3G3B3: [hexToRGB('#AAAAAB'), hexToRGB('#FFFFFF')],
+    赤: { hue: [0, 30], saturation: [33, 100], value: [33, 100] },
+    橙: { hue: [30, 60], saturation: [33, 100], value: [33, 100] },
+    黄: { hue: [60, 90], saturation: [33, 100], value: [33, 100] },
+    黄緑: { hue: [90, 150], saturation: [33, 100], value: [33, 100] },
+    緑: { hue: [150, 210], saturation: [33, 100], value: [33, 100] },
+    青緑: { hue: [210, 240], saturation: [33, 100], value: [33, 100] },
+    青: { hue: [240, 270], saturation: [33, 100], value: [33, 100] },
+    紫: { hue: [270, 300], saturation: [33, 100], value: [33, 100] },
+    ピンク: { hue: [300, 330], saturation: [33, 100], value: [33, 100] },
+    紅: { hue: [330, 360], saturation: [33, 100], value: [33, 100] },
+    茶: { hue: [0, 30], saturation: [33, 66], value: [33, 66] },
+    黒: { hue: [0, 360], saturation: [0, 100], value: [0, 33] },
+    白: { hue: [0, 360], saturation: [0, 33], value: [66, 100] },
   };
 
-  const colorGroups: ColorGroups = {
-    黒: ['R1G1B1', 'R1G1B2'],
-    青: ['R1G1B3', 'R1G1B2', 'R1G2B3', 'R1G3B3', 'R2G3B3'],
-    緑: ['R1G2B1', 'R1G2B2', 'R1G3B1', 'R1G3B2', 'R2G3B1', 'R2G3B2'],
-    紫: ['R2G1B1', 'R2G1B2', 'R2G1B3', 'R3G1B3', 'R3G2B3', 'R2G2B3'],
-    灰色: ['R2G2B1', 'R2G2B2'],
-    赤: ['R3G1B1', 'R3G1B2', 'R2G1B1', 'R2G1B2'],
-    オレンジ: ['R3G2B1', 'R3G2B2'],
-    黄色: ['R3G3B1', 'R3G3B2'],
-    白: ['R3G3B2', 'R3G3B3'],
-  };
-
-  const fetchPalettes = async (colorGroups: RGBModel[][], type: 'color' | 'number' | 'with') => {
+  const fetchPalettes = async (colorGroups: HSVRange[], type: 'color' | 'number' | 'with') => {
+    console.log(type);
     const fetchedPalettes = await apiClient.item.$post({
       body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
     });
@@ -87,10 +45,11 @@ export const usePaletteList = () => {
     return fetchedPalettes;
   };
 
+  const [rangesToSend, setRangesToSend] = useState<HSVRange[]>([]);
+  const [currentType, setCurrentType] = useState<'color' | 'number' | 'with'>('with');
+
   const handleFetch = () => {
-    const rangesToSend = selectedColors.flatMap((colorKey) =>
-      colorGroups[colorKey].map((key) => colorRanges[key])
-    );
+    const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
 
     const hasNumbers = selectedNumbers.length > 0;
     const hasColors = selectedColors.length > 0;
@@ -126,9 +85,12 @@ export const usePaletteList = () => {
     palettes,
     currentCount,
     setCurrentCount,
-    colorGroups,
+    colorRanges,
+    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
+    rangesToSend,
+    currentType,
   };
 };

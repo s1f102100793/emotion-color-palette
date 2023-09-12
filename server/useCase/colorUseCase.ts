@@ -1,4 +1,4 @@
-import type { ColorModel, RGBModel } from '$/commonTypesWithClient/models';
+import type { ColorModel, HSVModel } from '$/commonTypesWithClient/models';
 import { OPENAIAPI } from '$/service/envValues';
 import { prismaClient } from '$/service/prismaClient';
 import type { Color } from '@prisma/client';
@@ -44,7 +44,7 @@ export const makeColor = async (txet: string, number: number, id: number | undef
     const anser = await parser.parse(res);
 
     let hexColorsArray: string[] = [];
-    let colorsArray: RGBModel[] = [];
+    let colorsArray: HSVModel[] = [];
 
     const extractColors = (inputObj: { [key: string]: string }): string[] => {
       const colors: string[] = [];
@@ -61,7 +61,7 @@ export const makeColor = async (txet: string, number: number, id: number | undef
 
     if (anser !== null) {
       hexColorsArray = extractColors(anser);
-      colorsArray = hexColorsArray.map((color) => hexToRGBModel(color)); // 16進カラーコードを RGBModel に変換
+      colorsArray = hexColorsArray.map((color) => hexToHSVModel(color)); // 16進カラーコードを RGBModel に変換
     }
 
     createColordb(id, txet, number, colorsArray, 0); // 更新された colorsArray を渡す
@@ -71,10 +71,10 @@ export const makeColor = async (txet: string, number: number, id: number | undef
   }
 };
 
-const RGBModelSchema = z.object({
-  rStr: z.number(),
-  gStr: z.number(),
-  bStr: z.number(),
+const HSVModelSchema = z.object({
+  h: z.number(),
+  s: z.number(),
+  v: z.number(),
 });
 
 export const toColorModel = (prismaColor: Color): ColorModel => {
@@ -91,55 +91,57 @@ export const toColorModel = (prismaColor: Color): ColorModel => {
     createdAt: prismaColor.createdAt,
     text: prismaColor.text,
     paletteSize: prismaColor.paletteSize,
-    color: z.array(RGBModelSchema).parse(parsedColor),
+    color: z.array(HSVModelSchema).parse(parsedColor),
     like: prismaColor.like,
   };
 };
 
-const hexToDecimal = (hex: string): number => {
+// eslint-disable-next-line complexity
+const rgbToHSV = (rInput: number, gInput: number, bInput: number): HSVModel => {
+  const r = rInput / 255;
+  const g = gInput / 255;
+  const b = bInput / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+
+  let h = 0;
+  const d = max - min;
+  const s = max === 0 ? 0 : d / max;
+
+  if (max !== min) {
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  const v = max;
+
+  return { h: h * 360, s: s * 100, v: v * 100 };
+};
+
+const hexToHSVModel = (hex: string): HSVModel => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
 
-  // 各色の値を3桁の10進数の文字列に変換
-  const rStr = r.toString().padStart(3, '0');
-  const gStr = g.toString().padStart(3, '0');
-  const bStr = b.toString().padStart(3, '0');
-
-  // 3桁の10進数の文字列を結合
-  const decimalValueStr = rStr + gStr + bStr;
-
-  // 9桁の10進数の数値に変換
-  return parseInt(decimalValueStr);
-};
-
-const hexToRGBModel = (hex: string): RGBModel => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  // 各色の値を3桁の10進数に変換
-  const rNum = Number(r.toString().padStart(3, '0'));
-  const gNum = Number(g.toString().padStart(3, '0'));
-  const bNum = Number(b.toString().padStart(3, '0'));
-
-  return {
-    rStr: rNum,
-    gStr: gNum,
-    bStr: bNum,
-  };
-};
-
-const rgbModelToDecimal = (rgb: RGBModel): number => {
-  const combinedStr = `${rgb.rStr}${rgb.gStr}${rgb.bStr}`;
-  return Number(combinedStr);
+  return rgbToHSV(r, g, b);
 };
 
 export const createColordb = async (
   id: ColorModel['id'] | undefined,
   text: ColorModel['text'],
   paletteSize: ColorModel['paletteSize'],
-  color: RGBModel[],
+  color: HSVModel[],
   like: ColorModel['like']
 ) => {
   console.log('aaa');

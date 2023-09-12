@@ -1,15 +1,16 @@
 .container {
   display: flex;
+  flex-direction: row;
   width: 100%;
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
+.leftsidebar {
+  position: absolute;
+  top: 10%;
   left: 5%;
   z-index: 1000;
   width: 22%;
-  height: 100vh;
+  height: 110vh;
   border: 1px solid #eee;
   border-radius: 5px;
 }
@@ -74,10 +75,12 @@
 }
 
 .mainContent {
+  position: absolute;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: 100%;
+  width: 70%;
+  margin-top: 5%;
   margin-left: 30%;
   overflow: visible;
 }

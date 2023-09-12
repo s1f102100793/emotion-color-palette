@@ -10,80 +10,14 @@ const PaletteListPage = () => {
     palettes,
     currentCount,
     setCurrentCount,
-    colorGroups,
+    colorRanges,
+    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
+    rangesToSend,
+    currentType,
   } = usePaletteList();
-
-  useEffect(() => {
-    console.log('useEffect is running');
-    const sidebar = document.querySelector('.sidebar') as HTMLElement | null;
-
-    if (!sidebar) {
-      return;
-    }
-
-    const stickyScrollPoint = 100;
-
-    const handleScroll = () => {
-      console.log('Scroll detected:', window.scrollY);
-      if (window.scrollY > stickyScrollPoint) {
-        sidebar.style.position = 'absolute';
-        sidebar.style.top = `${stickyScrollPoint}px`;
-      } else {
-        sidebar.style.position = 'fixed';
-        sidebar.style.top = '20px';
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    window.addEventListener('scroll', () => {
-      console.log('Direct scroll listener: ', window.scrollY);
-    });
-
-    // あるいは
-
-    document.addEventListener('scroll', () => {
-      console.log('Direct scroll listener on document: ', window.scrollY);
-    });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log('useEffect for .mainContent scroll is running');
-    const mainContent = document.querySelector('.mainContent') as HTMLElement | null;
-
-    if (!mainContent) {
-      return;
-    }
-
-    const handleScroll = () => {
-      console.log('Scroll detected on .mainContent:', mainContent.scrollTop);
-    };
-
-    mainContent.addEventListener('scroll', handleScroll);
-
-    return () => {
-      mainContent.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleClick = () => {
-      console.log('Page was clicked!');
-    };
-
-    window.addEventListener('click', handleClick);
-
-    return () => {
-      window.removeEventListener('click', handleClick);
-    };
-  }, []);
 
   useEffect(() => {
     const start = Date.now();
@@ -108,9 +42,19 @@ const PaletteListPage = () => {
     animateCount();
   }, [palettes.length, setCurrentCount]);
 
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetchPalettes(rangesToSend, currentType);
+  //   }, 100);
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [fetchPalettes, rangesToSend, currentType]);
+
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
+      <div className={styles.leftsidebar}>
         <div className={styles.targetCount}>
           <span>対象パレット</span>
           <div>
@@ -133,7 +77,7 @@ const PaletteListPage = () => {
         </div>
         <div className={styles.paletteColors}>
           <div className={styles.subtitle}>カラー</div>
-          {Object.keys(colorGroups).map((color) => (
+          {Object.keys(colorRanges).map((color) => (
             <div key={color} className={styles.option}>
               <input
                 type="checkbox"
