@@ -1,5 +1,5 @@
 import type { ColorKey, HSVModel, ReturnColorModel } from 'commonTypesWithClient/models';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePaletteList } from 'src/hooks/usePaletteList';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
@@ -162,6 +162,28 @@ const PaletteListPage = () => {
     }
   };
 
+  const [copiedColor, setCopiedColor] = useState<{ color: string; paletteId: number } | null>(null);
+  const [hoveredColor, setHoveredColor] = useState<{ color: string; paletteId: number } | null>(
+    null
+  );
+
+  const copyToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('Copy');
+    textArea.remove();
+  };
+
+  const handleColorBoxClick = (color: string, paletteId: number) => {
+    copyToClipboard(color);
+    setCopiedColor({ color, paletteId });
+    setTimeout(() => {
+      setCopiedColor(null);
+    }, 3000);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.leftsidebar}>
@@ -212,8 +234,18 @@ const PaletteListPage = () => {
                   key={idx}
                   className={styles.color}
                   style={{ background: color, color: getTextColor(color) }}
-                  data-color={color}
-                />
+                  // handleColorBoxClickを変更
+                  onClick={() => handleColorBoxClick(color, palette.id)}
+                  onMouseEnter={() => setHoveredColor({ color, paletteId: palette.id })}
+                  onMouseLeave={() => setHoveredColor(null)}
+                >
+                  {/* チェックマークと色を表示する条件を変更 */}
+                  {copiedColor?.color === color && copiedColor?.paletteId === palette.id
+                    ? '✔'
+                    : hoveredColor?.color === color && hoveredColor?.paletteId === palette.id
+                    ? color
+                    : ''}
+                </div>
               ))}
             </div>
             <h3>{palette.text}</h3>
