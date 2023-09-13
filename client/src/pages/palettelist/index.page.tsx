@@ -1,5 +1,5 @@
-import type { ColorKey } from 'commonTypesWithClient/models';
 import { useEffect } from 'react';
+import LeftSidebar from 'src/components/LeftSidebar/LeftSidebar';
 import { usePaletteList } from 'src/hooks/usePaletteList';
 import styles from './palettelist.module.css';
 
@@ -48,45 +48,15 @@ const PaletteListPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.leftsidebar}>
-        <div className={styles.targetCount}>
-          <span>対象パレット</span>
-          <div>
-            <span className={styles.currentCount}>{currentCount}</span>
-            <span className={styles.countLabel}>件</span>
-          </div>
-        </div>
-        <div className={styles.paletteNumbers}>
-          <div className={styles.subtitle}>パレット数</div>
-          {[4, 5, 6].map((num) => (
-            <div key={num} className={styles.option}>
-              <input
-                type="checkbox"
-                checked={selectedNumbers.includes(num)}
-                onChange={() => handleNumberChange(num)}
-              />
-              <label>{num}色</label>
-            </div>
-          ))}
-        </div>
-        <div className={styles.paletteColors}>
-          <div className={styles.subtitle}>カラー</div>
-          {Object.keys(colorRanges).map((color) => (
-            <div key={color} className={styles.option}>
-              <input
-                type="checkbox"
-                checked={selectedColors.includes(color as ColorKey)}
-                onChange={() => handleColorChange(color as ColorKey)}
-              />
-              <span className={styles.colorDisplay} style={{ backgroundColor: color }} />
-              <label>{color}</label>
-            </div>
-          ))}
-        </div>
-        <button className={styles.fetchbutton} onClick={handleFetch}>
-          パレットを取得
-        </button>
-      </div>
+      <LeftSidebar
+        selectedNumbers={selectedNumbers}
+        selectedColors={selectedColors}
+        handleNumberChange={handleNumberChange}
+        colorRanges={colorRanges}
+        handleColorChange={handleColorChange}
+        handleFetch={handleFetch}
+        currentCount={currentCount}
+      />
       <div className={styles.mainContent}>
         {palettes.map((palette) => (
           <div key={palette.id} className={styles.paletteItem}>
