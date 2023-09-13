@@ -162,7 +162,10 @@ const PaletteListPage = () => {
     }
   };
 
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [copiedColor, setCopiedColor] = useState<{ color: string; paletteId: number } | null>(null);
+  const [hoveredColor, setHoveredColor] = useState<{ color: string; paletteId: number } | null>(
+    null
+  );
 
   const copyToClipboard = (text: string) => {
     const textArea = document.createElement('textarea');
@@ -173,11 +176,11 @@ const PaletteListPage = () => {
     textArea.remove();
   };
 
-  const handleColorBoxClick = (color: string, index: number) => {
+  const handleColorBoxClick = (color: string, paletteId: number) => {
     copyToClipboard(color);
-    setCopiedIndex(index);
+    setCopiedColor({ color, paletteId });
     setTimeout(() => {
-      setCopiedIndex(null);
+      setCopiedColor(null);
     }, 3000);
   };
 
@@ -231,9 +234,18 @@ const PaletteListPage = () => {
                   key={idx}
                   className={styles.color}
                   style={{ background: color, color: getTextColor(color) }}
-                  data-color={color}
-                  onClick={() => copyToClipboard(color)}
-                />
+                  // handleColorBoxClickを変更
+                  onClick={() => handleColorBoxClick(color, palette.id)}
+                  onMouseEnter={() => setHoveredColor({ color, paletteId: palette.id })}
+                  onMouseLeave={() => setHoveredColor(null)}
+                >
+                  {/* チェックマークと色を表示する条件を変更 */}
+                  {copiedColor?.color === color && copiedColor?.paletteId === palette.id
+                    ? '✔'
+                    : hoveredColor?.color === color && hoveredColor?.paletteId === palette.id
+                    ? color
+                    : ''}
+                </div>
               ))}
             </div>
             <h3>{palette.text}</h3>
