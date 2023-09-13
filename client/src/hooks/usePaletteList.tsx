@@ -32,7 +32,6 @@ export const usePaletteList = () => {
     const fetchedPalettes = await apiClient.item.$post({
       body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
     });
-    console.log(fetchedPalettes);
 
     if (Array.isArray(fetchedPalettes)) {
       setPalettes(fetchedPalettes);
@@ -81,6 +80,7 @@ export const usePaletteList = () => {
     selectedColors,
     selectedNumbers,
     palettes,
+    setPalettes,
     currentCount,
     setCurrentCount,
     colorRanges,
