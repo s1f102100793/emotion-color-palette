@@ -1,5 +1,5 @@
 import type { ColorKey, HSVModel, ReturnColorModel } from 'commonTypesWithClient/models';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePaletteList } from 'src/hooks/usePaletteList';
 import { apiClient } from 'src/utils/apiClient';
 import styles from './palettelist.module.css';
@@ -162,6 +162,25 @@ const PaletteListPage = () => {
     }
   };
 
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const copyToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('Copy');
+    textArea.remove();
+  };
+
+  const handleColorBoxClick = (color: string, index: number) => {
+    copyToClipboard(color);
+    setCopiedIndex(index);
+    setTimeout(() => {
+      setCopiedIndex(null);
+    }, 3000);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.leftsidebar}>
@@ -213,6 +232,7 @@ const PaletteListPage = () => {
                   className={styles.color}
                   style={{ background: color, color: getTextColor(color) }}
                   data-color={color}
+                  onClick={() => copyToClipboard(color)}
                 />
               ))}
             </div>
