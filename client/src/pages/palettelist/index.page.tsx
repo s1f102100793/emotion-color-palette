@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import LeftSidebar from 'src/components/LeftSidebar/LeftSidebar';
+import MainContent from 'src/components/MainContent/MainContent';
 import { usePaletteList } from 'src/hooks/usePaletteList';
 import styles from './palettelist.module.css';
 
@@ -57,37 +58,16 @@ const PaletteListPage = () => {
         handleFetch={handleFetch}
         currentCount={currentCount}
       />
-      <div className={styles.mainContent}>
-        {palettes.map((palette) => (
-          <div key={palette.id} className={styles.paletteItem}>
-            <div className={styles.colorBox}>
-              {palette.color.map((color: string, idx: number) => (
-                <div
-                  key={idx}
-                  className={styles.color}
-                  style={{ background: color, color: getTextColor(color) }}
-                  onClick={() => handleColorBoxClick(color, palette.id)}
-                  onMouseEnter={() => setHoveredColor({ color, paletteId: palette.id })}
-                  onMouseLeave={() => setHoveredColor(null)}
-                >
-                  {copiedColor?.color === color && copiedColor?.paletteId === palette.id
-                    ? '✔'
-                    : hoveredColor?.color === color && hoveredColor?.paletteId === palette.id
-                    ? color
-                    : ''}
-                </div>
-              ))}
-            </div>
-            <h3>{palette.text}</h3>
-            <div className={styles.info}>
-              <div>
-                <span onClick={() => handleLikeClick(palette)}>❤️ {palette.like}</span>
-              </div>
-              <div>{timeSince(new Date(palette.createdAt))}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <MainContent
+        palettes={palettes}
+        getTextColor={getTextColor}
+        handleColorBoxClick={handleColorBoxClick}
+        setHoveredColor={setHoveredColor}
+        copiedColor={copiedColor}
+        hoveredColor={hoveredColor}
+        handleLikeClick={handleLikeClick}
+        timeSince={timeSince}
+      />
     </div>
   );
 };
