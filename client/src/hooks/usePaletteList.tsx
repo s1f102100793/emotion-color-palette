@@ -5,7 +5,7 @@ import type {
   HSVRange,
   ReturnColorModel,
 } from 'commonTypesWithClient/models';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { apiClient } from 'src/utils/apiClient';
 
 export const usePaletteList = () => {
@@ -28,27 +28,29 @@ export const usePaletteList = () => {
     白: { hue: [0, 360], saturation: [0, 33], value: [66, 100] },
   };
 
-  const fetchPalettes = async (colorGroups: HSVRange[], type: 'color' | 'number' | 'with') => {
-    console.log(type);
-    const fetchedPalettes = await apiClient.item.$post({
-      body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
-    });
+  const fetchPalettes = useCallback(
+    async (colorGroups: HSVRange[], type: 'color' | 'number' | 'with') => {
+      console.log(type);
+      const fetchedPalettes = await apiClient.item.$post({
+        body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
+      });
 
-    if (Array.isArray(fetchedPalettes)) {
-      setPalettes(fetchedPalettes);
-    } else {
-      setPalettes([]);
-    }
+      if (Array.isArray(fetchedPalettes)) {
+        setPalettes(fetchedPalettes);
+      } else {
+        setPalettes([]);
+      }
 
-    return fetchedPalettes;
-  };
+      return fetchedPalettes;
+    },
+    [selectedNumbers]
+  );
 
   const [rangesToSend, setRangesToSend] = useState<HSVRange[]>([]);
   const [currentType, setCurrentType] = useState<'color' | 'number' | 'with'>('with');
+  const rangesToSendcolorKey = selectedColors.map((colorKey) => colorRanges[colorKey]);
 
   const handleFetch = () => {
-    const rangesToSend = selectedColors.map((colorKey) => colorRanges[colorKey]);
-
     const hasNumbers = selectedNumbers.length > 0;
     const hasColors = selectedColors.length > 0;
 
@@ -62,7 +64,7 @@ export const usePaletteList = () => {
       type = 'color';
     }
 
-    fetchPalettes(rangesToSend, type);
+    fetchPalettes(rangesToSendcolorKey, type);
   };
 
   const handleColorChange = (color: ColorKey) => {
@@ -240,5 +242,6 @@ export const usePaletteList = () => {
     hoveredColor,
     setHoveredColor,
     handleColorBoxClick,
+    rangesToSendcolorKey,
   };
 };

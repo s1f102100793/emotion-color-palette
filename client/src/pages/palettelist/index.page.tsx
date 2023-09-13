@@ -12,6 +12,7 @@ const PaletteListPage = () => {
     currentCount,
     setCurrentCount,
     colorRanges,
+    fetchPalettes,
     handleColorChange,
     handleNumberChange,
     handleFetch,
@@ -22,7 +23,13 @@ const PaletteListPage = () => {
     hoveredColor,
     setHoveredColor,
     handleColorBoxClick,
+    rangesToSendcolorKey,
   } = usePaletteList();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    fetchPalettes(rangesToSendcolorKey, 'number');
+  }, [fetchPalettes, rangesToSendcolorKey]);
 
   useEffect(() => {
     const start = Date.now();
