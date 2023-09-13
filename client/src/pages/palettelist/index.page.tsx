@@ -26,7 +26,6 @@ const PaletteListPage = () => {
     rangesToSendcolorKey,
   } = usePaletteList();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchPalettes(rangesToSendcolorKey, 'number');
   }, [fetchPalettes, rangesToSendcolorKey]);
