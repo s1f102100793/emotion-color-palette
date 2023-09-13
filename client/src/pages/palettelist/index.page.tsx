@@ -96,12 +96,10 @@ const PaletteListPage = () => {
                   key={idx}
                   className={styles.color}
                   style={{ background: color, color: getTextColor(color) }}
-                  // handleColorBoxClickを変更
                   onClick={() => handleColorBoxClick(color, palette.id)}
                   onMouseEnter={() => setHoveredColor({ color, paletteId: palette.id })}
                   onMouseLeave={() => setHoveredColor(null)}
                 >
-                  {/* チェックマークと色を表示する条件を変更 */}
                   {copiedColor?.color === color && copiedColor?.paletteId === palette.id
                     ? '✔'
                     : hoveredColor?.color === color && hoveredColor?.paletteId === palette.id
