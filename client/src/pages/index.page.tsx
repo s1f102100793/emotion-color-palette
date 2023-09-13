@@ -1,17 +1,21 @@
-import type { ChangeEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { apiClient } from 'src/utils/apiClient';
+import { useHome } from 'src/hooks/useHome';
 import styles from './index.module.css';
 
 const Home = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [colors, setColors] = useState<string[]>([]);
-  // const [selectedValue, setSelectedValue] = useState<number>(4);
-  const [loading, setLoading] = useState(false);
-
-  const loadingText = '作成中...';
-  const [chars, setChars] = useState<string[]>([]);
+  const {
+    inputValue,
+    colors,
+    selectedValue,
+    loadingText,
+    loading,
+    chars,
+    setChars,
+    handleInputChange,
+    handleChange,
+    handleSubmit,
+  } = useHome();
 
   useEffect(() => {
     if (loading) {
@@ -25,60 +29,7 @@ const Home = () => {
     } else {
       setChars([]);
     }
-  }, [loading]);
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const valueAsNumber = Number(event.target.value);
-    setSelectedValue(valueAsNumber);
-    console.log('選択された値:', event.target.value);
-  };
-
-  const [index, setIndex] = useState(0);
-  const [selectedValue, setSelectedValue] = useState(4);
-
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     try {
-  //       if (index < phrases.length) {
-  //         const res = await apiClient.color.$post({
-  //           body: { text: phrases[index], number: selectedValue },
-  //         });
-
-  //         // selectedValueを更新 (4 -> 5 -> 6 -> 4 ...)
-  //         setSelectedValue((prev) => (prev === 6 ? 4 : prev + 1));
-
-  //         setIndex((prev) => prev + 1);
-  //       } else {
-  //         clearInterval(interval);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       clearInterval(interval);
-  //     }
-  //   }, 5000); // 0.1秒ごとにリクエストを送信
-
-  //   return () => clearInterval(interval); // コンポーネントのアンマウント時にintervalをクリア
-  // }, [index, selectedValue]);
-
-  const handleSubmit = async () => {
-    setColors([]);
-    setLoading(true);
-    console.log(inputValue);
-    const res = await apiClient.color.$post({ body: { text: inputValue, number: selectedValue } });
-    console.log(res);
-    if (res !== null && res !== undefined) {
-      const colorsArray = Object.values(res);
-      setColors(colorsArray);
-      setLoading(false);
-    } else {
-      console.error('API response is undefined.');
-      setLoading(false);
-    }
-  };
+  }, [loading, setChars, loadingText]);
 
   return (
     <>
