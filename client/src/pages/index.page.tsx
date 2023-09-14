@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useHome } from 'src/hooks/useHome';
+import { pagesPath } from 'src/utils/$path';
 import styles from './index.module.css';
 
 const Home = () => {
@@ -89,6 +91,9 @@ const Home = () => {
             </div>
           ))}
         </div>
+      </div>
+      <div className={styles.floatingButton}>
+        <Link href={pagesPath.palettelist.$url()}>→</Link>
       </div>
     </>
   );
