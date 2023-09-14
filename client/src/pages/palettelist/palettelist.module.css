@@ -130,6 +130,13 @@
   overflow: visible;
 }
 
+.sortButtonsContainer {
+  width: 100%;
+  margin-right: 5px;
+  margin-bottom: 20px;
+  text-align: right;
+}
+
 .paletteItem {
   position: relative;
   display: flex;

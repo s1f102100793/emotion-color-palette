@@ -23,9 +23,24 @@ const MainContent: React.FC<MainContentProps> = ({
   handleLikeClick,
   timeSince,
 }) => {
+  const [sortType, setSortType] = React.useState<'createdAt' | 'like' | null>(null);
+
+  const sortedPalettes = React.useMemo(() => {
+    if (sortType === 'createdAt') {
+      return [...palettes].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+    return [...palettes].sort((a, b) => b.like - a.like);
+  }, [palettes, sortType]);
+
   return (
     <div className={styles.mainContent}>
-      {palettes.map((palette) => (
+      <div className={styles.sortButtonsContainer}>
+        <button onClick={() => setSortType('createdAt')}>新しい順</button>
+        <button onClick={() => setSortType('like')}>いいねの多い順</button>
+      </div>
+      {sortedPalettes.map((palette) => (
         <div key={palette.id} className={styles.paletteItem}>
           <div className={styles.colorBox}>
             {palette.color.map((color: string, idx: number) => (
