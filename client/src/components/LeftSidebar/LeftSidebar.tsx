@@ -33,28 +33,29 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
       const rect = sidebarRef.current.getBoundingClientRect();
 
       if (originalTopRef.current === null) {
-        originalTopRef.current = rect.top + window.scrollY;
+        originalTopRef.current = rect.top;
       }
 
       const currentScrollY = window.scrollY;
 
-      if (lastScrollYRef.current !== null) {
-        if (currentScrollY < lastScrollYRef.current) {
+      if (currentScrollY > (lastScrollYRef.current || 0)) {
+        if (rect.bottom <= window.innerHeight && !isFixedRef.current) {
+          sidebarRef.current.style.position = 'fixed';
+          sidebarRef.current.style.bottom = '0px';
+          sidebarRef.current.style.left = '5%';
+          isFixedRef.current = true;
+        }
+      }
+      else {
+        if (rect.top >= originalTopRef.current) {
           sidebarRef.current.style.position = 'relative';
-          sidebarRef.current.style.transform = `translateY(${
-            currentScrollY - originalTopRef.current
-          }px)`;
-          if (rect.top > 10) {
-            sidebarRef.current.style.transform = 'none';
-            isFixedRef.current = false;
-          }
-        } else {
-          if (rect.bottom <= window.innerHeight && !isFixedRef.current) {
-            sidebarRef.current.style.position = 'fixed';
-            sidebarRef.current.style.bottom = '0px';
-            sidebarRef.current.style.left = '5%';
-            isFixedRef.current = true;
-          }
+          sidebarRef.current.style.top = 'auto';
+          sidebarRef.current.style.bottom = 'auto';
+          isFixedRef.current = false;
+        } else if (isFixedRef.current) {
+          sidebarRef.current.style.position = 'fixed';
+          sidebarRef.current.style.top = '10px'; // 上のマージンを10pxに設定します
+          sidebarRef.current.style.bottom = 'auto';
         }
       }
 
