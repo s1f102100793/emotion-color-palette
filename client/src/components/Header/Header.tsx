@@ -17,7 +17,7 @@ const Header = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  
+
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <span className={styles.revealingText}>感情カラーパレット</span>

@@ -92,8 +92,11 @@ const Home = () => {
           ))}
         </div>
       </div>
-      <div className={styles.floatingButton}>
-        <Link href={pagesPath.palettelist.$url()}>→</Link>
+      <div className={styles.floatingButtonContainer}>
+        <span className={styles.floatingText}>カラーパレットのリストへ</span>
+        <Link href={pagesPath.palettelist.$url()} legacyBehavior>
+          <a className={styles.floatingButton}>→</a>
+        </Link>
       </div>
     </>
   );

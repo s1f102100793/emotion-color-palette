@@ -124,22 +124,38 @@
   background-color: rgb(255 255 255 / 70%);
 }
 
-.floatingButton {
+.floatingButtonContainer {
   position: fixed;
   right: 20px;
   bottom: 20px;
   display: flex;
   align-items: center;
+}
+
+.floatingText {
+  margin-top: auto;
+  margin-right: 10px;
+  font-family: Lato, 'Noto Sans JP', sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.floatingButton {
+  display: flex;
+  align-items: center;
   justify-content: center;
   width: 50px;
   height: 50px;
-  color: #fff;
+  color: #333;
   cursor: pointer;
-  background-color: #333;
+  background-color: #fff;
+  border: solid 1px #333;
   border-radius: 50%;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 }
 
 .floatingButton:hover {
+  color: #fff;
   background-color: #555;
 }
