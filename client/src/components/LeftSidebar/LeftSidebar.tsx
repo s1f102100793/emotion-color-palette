@@ -33,30 +33,46 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
       const rect = sidebarRef.current.getBoundingClientRect();
 
       if (originalTopRef.current === null) {
+        console.log('aaaa');
         originalTopRef.current = rect.top;
       }
 
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > (lastScrollYRef.current || 0)) {
+      console.log('rect.top:', rect.top);
+      console.log('window.innerHeight:', window.innerHeight);
+      console.log('isFixed:', isFixedRef.current);
+
+      if (currentScrollY > (lastScrollYRef.current !== null ? lastScrollYRef.current : 0)) {
+        console.log('bbbb');
         if (rect.bottom <= window.innerHeight && !isFixedRef.current) {
+          console.log('cccc');
           sidebarRef.current.style.position = 'fixed';
           sidebarRef.current.style.bottom = '0px';
           sidebarRef.current.style.left = '5%';
           isFixedRef.current = true;
         }
-      }
-      else {
-        if (rect.top >= originalTopRef.current) {
-          sidebarRef.current.style.position = 'relative';
-          sidebarRef.current.style.top = 'auto';
-          sidebarRef.current.style.bottom = 'auto';
-          isFixedRef.current = false;
-        } else if (isFixedRef.current) {
+      } else if (currentScrollY < (lastScrollYRef.current !== null ? lastScrollYRef.current : 0)) {
+        console.log('xxxx');
+        if (rect.top >= 0 && !isFixedRef.current) {
+          console.log('yyyy');
           sidebarRef.current.style.position = 'fixed';
-          sidebarRef.current.style.top = '10px'; // 上のマージンを10pxに設定します
-          sidebarRef.current.style.bottom = 'auto';
+          sidebarRef.current.style.top = '0px';
+          sidebarRef.current.style.left = '5%';
+          isFixedRef.current = true;
         }
+        // if (rect.top >= originalTopRef.current) {
+        //   console.log('dddd');
+        //   sidebarRef.current.style.position = 'relative';
+        //   sidebarRef.current.style.top = 'auto';
+        //   sidebarRef.current.style.bottom = 'auto';
+        //   isFixedRef.current = false;
+        // } else if (isFixedRef.current) {
+        //   console.log('eeee');
+        //   sidebarRef.current.style.position = 'fixed';
+        //   // sidebarRef.current.style.top = '10px';
+        //   sidebarRef.current.style.bottom = 'auto';
+        // }
       }
 
       lastScrollYRef.current = currentScrollY;
