@@ -130,6 +130,33 @@
   overflow: visible;
 }
 
+.sortButtonsContainer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.whiteButton {
+  padding: 8px 15px;
+  margin-left: 0.5vw;
+  font-family: Lato, 'Noto Sans JP', sans-serif;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px -10px rgb(0 64 128 / 20%);
+  transition: background-color 0.3s;
+}
+
+.whiteButton:hover {
+  background-color: #f9f9f9;
+}
+
 .paletteItem {
   position: relative;
   display: flex;
