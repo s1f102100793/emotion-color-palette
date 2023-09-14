@@ -9,7 +9,6 @@
 .leftsidebar {
   position: absolute;
   left: 5%;
-  z-index: 1000;
   width: 22%;
   height: 125vh;
   margin-top: 5%;
