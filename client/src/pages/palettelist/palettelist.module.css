@@ -1,16 +1,18 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 100%;
+  font-family: Lato, 'Noto Sans JP', sans-serif;
 }
 
 .leftsidebar {
   position: absolute;
-  top: 10%;
   left: 5%;
   z-index: 1000;
   width: 22%;
   height: 125vh;
+  margin-top: 5%;
   background-color: #f8f8f8;
   border: 1px solid #eee;
   border-radius: 5px;
@@ -66,6 +68,7 @@
 .paletteNumbers,
 .paletteColors {
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .option {
@@ -140,9 +143,10 @@
 
 .paletteItem .colorBox {
   display: flex;
-  width: 75%;
+  width: 90%;
   height: 20vh;
   margin-bottom: 10px;
+  margin-left: -1px;
 }
 
 .paletteItem .colorBox .color {
@@ -152,7 +156,25 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  border-top: 1px solid #d4d4d4;
+  border-right: 0;
+  border-bottom: 1px solid #d4d4d4;
+  border-left: 0;
   transition: flex 0.3s;
+}
+
+.paletteItem .colorBox .color:last-child {
+  border-right: 1px solid #d4d4d4;
+  border-left: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.paletteItem .colorBox .color:first-child {
+  border-right: 0;
+  border-left: 1px solid #d4d4d4;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .paletteItem .colorBox .color:hover::before {
@@ -164,16 +186,6 @@
   content: attr(data-color);
   border-radius: 3px;
   transform: translate(-50%, -50%);
-}
-
-.paletteItem .colorBox .color:first-child {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-
-.paletteItem .colorBox .color:last-child {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
 }
 
 .paletteItem .info {
