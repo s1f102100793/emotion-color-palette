@@ -136,6 +136,7 @@
   flex-direction: column;
   align-items: center;
   max-width: calc(25% - 10px);
+  aspect-ratio: 1 / 1;
   padding: 10px;
   margin-right: 5px;
   margin-bottom: 20px;
@@ -149,7 +150,7 @@
 .paletteItem .colorBox {
   display: flex;
   width: 90%;
-  height: 20vh;
+  height: 80%;
   margin-bottom: 10px;
   margin-left: -1px;
 }
@@ -217,13 +218,15 @@
   max-width: 60%;
   margin-left: auto;
   overflow: hidden;
+  font-size: calc(0.5em + 0.4vw);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .paletteItem h3 {
   max-width: 100%;
-  margin-top: 10px;
+  margin-top: 0.5vh;
+  margin-bottom: 0.8vh;
   overflow: hidden;
   font-size: calc(0.8em + 0.4vw);
   text-overflow: ellipsis;
