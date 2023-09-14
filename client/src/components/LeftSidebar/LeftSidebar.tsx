@@ -123,30 +123,35 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
       <div className={styles.paletteNumbers}>
         <div className={styles.subtitle}>パレット数</div>
         {[4, 5, 6].map((num) => (
-          <div key={num} className={styles.option}>
+          <label key={num} className={styles.option}>
+            {' '}
+            {/* div を label に変更 */}
             <input
+              id={`num-${num}`}
               type="checkbox"
               checked={selectedNumbers.includes(num)}
               onChange={() => handleNumberChange(num)}
             />
-            <label>{num}色</label>
-          </div>
+            {num}色
+          </label>
         ))}
       </div>
       <div className={styles.paletteColors}>
         <div className={styles.subtitle}>カラー</div>
         {Object.keys(colorRanges).map((color) => (
-          <div key={color} className={styles.option}>
+          <label key={color} className={styles.option}>
             <input
+              id={`color-${color}`}
               type="checkbox"
               checked={selectedColors.includes(color as ColorKey)}
               onChange={() => handleColorChange(color as ColorKey)}
             />
             <span className={styles.colorDisplay} style={{ backgroundColor: color }} />
-            <label>{color}</label>
-          </div>
+            <span>{color}</span>
+          </label>
         ))}
       </div>
+
       <button className={styles.fetchbutton} onClick={handleFetch}>
         パレットを取得
       </button>
