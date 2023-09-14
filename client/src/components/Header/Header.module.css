@@ -21,3 +21,20 @@
 .header.scrolled {
   box-shadow: 0 7px 6px rgb(0 0 0 / 10%);
 }
+
+@keyframes reveal-text {
+  from {
+    color: transparent;
+  }
+
+  to {
+    color: black;
+  }
+}
+
+.revealingText {
+  position: relative;
+  overflow: hidden;
+  color: transparent;
+  animation: 1s reveal-text forwards 0.5s;
+}

@@ -18,7 +18,7 @@ const Header = () => {
   }, []);
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
-      <span>感情カラーパレット</span>
+      <span className={styles.revealingText}>感情カラーパレット</span>
       <Link href={pagesPath.$url()}>
         <span>作成する</span>
       </Link>
