@@ -6,6 +6,8 @@
   font-family: Lato, 'Noto Sans JP', sans-serif;
 }
 
+/* leftsidebar */
+
 .leftsidebar {
   position: absolute;
   left: 5%;
@@ -114,6 +116,8 @@
   background-color: #0056b3;
 }
 
+/* maincontent */
+
 .mainContent {
   position: absolute;
   display: flex;
@@ -131,10 +135,12 @@
   flex-basis: calc(25% - 10px);
   flex-direction: column;
   align-items: center;
+  max-width: calc(25% - 10px);
   padding: 10px;
   margin-right: 5px;
   margin-bottom: 20px;
   margin-left: 5px;
+  overflow: hidden;
   border: 1px solid #eee;
   border-radius: 5px;
   box-shadow: 0 10px 40px -10px rgb(0 64 128 / 20%);
@@ -193,8 +199,35 @@
   width: 80%;
 }
 
+.paletteItem .info > div {
+  display: flex;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paletteItem .info .likeContainer {
+  margin-right: auto;
+  font-size: calc(0.7em + 0.3vw);
+  white-space: nowrap;
+}
+
+.paletteItem .info .timeContainer {
+  display: flex;
+  align-items: center;
+  max-width: 60%;
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .paletteItem h3 {
+  max-width: 100%;
   margin-top: 10px;
+  overflow: hidden;
+  font-size: calc(0.8em + 0.4vw);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .paletteItem .colorBox .color:hover {
