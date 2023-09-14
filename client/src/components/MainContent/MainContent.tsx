@@ -37,8 +37,12 @@ const MainContent: React.FC<MainContentProps> = ({
   return (
     <div className={styles.mainContent}>
       <div className={styles.sortButtonsContainer}>
-        <button onClick={() => setSortType('createdAt')}>新しい順</button>
-        <button onClick={() => setSortType('like')}>いいねの多い順</button>
+        <button className={styles.whiteButton} onClick={() => setSortType('createdAt')}>
+          新しい順
+        </button>
+        <button className={styles.whiteButton} onClick={() => setSortType('like')}>
+          いいね順
+        </button>
       </div>
       {sortedPalettes.map((palette) => (
         <div key={palette.id} className={styles.paletteItem}>
