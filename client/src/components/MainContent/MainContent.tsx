@@ -47,10 +47,10 @@ const MainContent: React.FC<MainContentProps> = ({
           </div>
           <h3>{palette.text}</h3>
           <div className={styles.info}>
-            <div>
+            <div className={styles.likeContainer}>
               <span onClick={() => handleLikeClick(palette)}>❤️ {palette.like}</span>
             </div>
-            <div>{timeSince(new Date(palette.createdAt))}</div>
+            <div className={styles.timeContainer}>{timeSince(new Date(palette.createdAt))}</div>
           </div>
         </div>
       ))}

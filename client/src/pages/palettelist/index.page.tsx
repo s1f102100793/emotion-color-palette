@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import Header from 'src/components/Header/Header';
 import LeftSidebar from 'src/components/LeftSidebar/LeftSidebar';
 import MainContent from 'src/components/MainContent/MainContent';
 import { usePaletteList } from 'src/hooks/usePaletteList';
@@ -65,6 +66,7 @@ const PaletteListPage = () => {
         />
       </Helmet>
       <div className={styles.container}>
+        <Header />
         <LeftSidebar
           selectedNumbers={selectedNumbers}
           selectedColors={selectedColors}

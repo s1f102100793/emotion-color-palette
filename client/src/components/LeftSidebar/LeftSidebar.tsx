@@ -1,4 +1,4 @@
-import type { ColorKey, ColorRanges } from 'commonTypesWithClient/models';
+import { colorToHex, type ColorKey, type ColorRanges } from 'commonTypesWithClient/models';
 import React from 'react';
 import styles from 'src/pages/palettelist/palettelist.module.css';
 
@@ -123,30 +123,41 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
       <div className={styles.paletteNumbers}>
         <div className={styles.subtitle}>パレット数</div>
         {[4, 5, 6].map((num) => (
-          <div key={num} className={styles.option}>
+          <label key={num} className={styles.option}>
+            {' '}
+            {/* div を label に変更 */}
             <input
+              id={`num-${num}`}
               type="checkbox"
               checked={selectedNumbers.includes(num)}
               onChange={() => handleNumberChange(num)}
             />
-            <label>{num}色</label>
-          </div>
+            {num}色
+          </label>
         ))}
       </div>
       <div className={styles.paletteColors}>
         <div className={styles.subtitle}>カラー</div>
-        {Object.keys(colorRanges).map((color) => (
-          <div key={color} className={styles.option}>
-            <input
-              type="checkbox"
-              checked={selectedColors.includes(color as ColorKey)}
-              onChange={() => handleColorChange(color as ColorKey)}
-            />
-            <span className={styles.colorDisplay} style={{ backgroundColor: color }} />
-            <label>{color}</label>
-          </div>
-        ))}
+        {Object.keys(colorRanges).map((color) => {
+          const colorKey = color as ColorKey;
+          return (
+            <label key={color} className={styles.option}>
+              <input
+                id={`color-${color}`}
+                type="checkbox"
+                checked={selectedColors.includes(colorKey)}
+                onChange={() => handleColorChange(colorKey)}
+              />
+              <span
+                className={styles.colorDisplay}
+                style={{ backgroundColor: colorToHex[colorKey] }}
+              />
+              <span>{color}</span>
+            </label>
+          );
+        })}
       </div>
+
       <button className={styles.fetchbutton} onClick={handleFetch}>
         パレットを取得
       </button>

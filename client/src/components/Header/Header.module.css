@@ -1,0 +1,40 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  padding: 1rem 0;
+  padding: 1rem;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  background-color: #fff;
+  border-bottom: 1px solid #f1f1f1;
+  transition: box-shadow 200ms ease-in-out;
+}
+
+.header.scrolled {
+  box-shadow: 0 7px 6px rgb(0 0 0 / 10%);
+}
+
+@keyframes reveal-text {
+  from {
+    color: transparent;
+  }
+
+  to {
+    color: black;
+  }
+}
+
+.revealingText {
+  position: relative;
+  overflow: hidden;
+  color: transparent;
+  animation: 1s reveal-text forwards 0.5s;
+}
