@@ -104,6 +104,20 @@ export type ColorKey =
   | '白'
   | '黒';
 
+export const colorToHex: Record<ColorKey, string> = {
+  赤: '#FF0000',
+  橙: '#FFA500',
+  黄: '#FFFF00',
+  緑: '#008000',
+  水色: '#00FFFF',
+  青: '#0000FF',
+  紫: '#800080',
+  ピンク: '#FFC0CB',
+  茶: '#A52A2A',
+  白: '#FFFFFF',
+  黒: '#000000',
+};
+
 export type HSVRange = {
   hue: [number, number];
   saturation: [number, number];
