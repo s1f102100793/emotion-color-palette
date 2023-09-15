@@ -44,10 +44,10 @@ export const usePaletteList = () => {
     }, []);
 
   const fetchPalettes = useCallback(
-    async (colorGroups: HSVRange[], type: 'color' | 'number' | 'with') => {
+    async (colorGroups: HSVRange[], type: 'color' | 'number' | 'with', numbers: number[]) => {
       console.log(type);
       const fetchedPalettes = await apiClient.item.$post({
-        body: { type, numberlist: selectedNumbers, colorlist: colorGroups },
+        body: { type, numberlist: numbers, colorlist: colorGroups },
       });
 
       if (Array.isArray(fetchedPalettes)) {
@@ -58,7 +58,7 @@ export const usePaletteList = () => {
 
       return fetchedPalettes;
     },
-    [selectedNumbers]
+    []
   );
 
   const [rangesToSend, setRangesToSend] = useState<HSVRange[]>([]);
@@ -83,7 +83,7 @@ export const usePaletteList = () => {
       type = 'color';
     }
 
-    fetchPalettes(rangesToSendcolorKey, type);
+    fetchPalettes(rangesToSendcolorKey, type, selectedNumbers);
   };
 
   const handleColorChange = (color: ColorKey) => {
