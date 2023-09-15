@@ -45,6 +45,7 @@ export const useHome = () => {
     setSelectedValue,
     loadingText,
     loading,
+    setLoading,
     chars,
     setChars,
     handleInputChange,

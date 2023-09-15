@@ -1,12 +1,29 @@
-import { Portal } from '../Portal';
 import styles from './Loading.module.css';
 
-export const Loading = (props: { visible: boolean }) => {
-  return props.visible ? (
-    <Portal>
-      <div className={styles.container}>
-        <div className={styles.loader} />
+const Loading: React.FC = () => {
+  const words = ['EMOTION', 'COLOR', 'PALATTE'];
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.blackSreen}>
+        {words.map((word, index) => (
+          <div key={index} className={styles.letter} style={{ animationDelay: `${0.5 * index}s` }}>
+            {word}
+          </div>
+        ))}
       </div>
-    </Portal>
-  ) : null;
+
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={index}
+          className={styles[`slide${index + 1}` as keyof typeof styles]}
+          style={{
+            animationDelay: `${0.2 * index}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
 };
+
+export default Loading;
