@@ -13,12 +13,21 @@ const Home = () => {
     selectedValue,
     loadingText,
     loading,
+    setLoading,
     chars,
     setChars,
     handleInputChange,
     handleChange,
     handleSubmit,
   } = useHome();
+
+  useEffect(() => {
+    setLoading(true);
+    const animationDuration = 5000;
+    setTimeout(() => {
+      setLoading(false);
+    }, animationDuration);
+  }, [setLoading]);
 
   useEffect(() => {
     console.log(loading);
