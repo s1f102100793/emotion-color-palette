@@ -9,7 +9,7 @@
 }
 
 .title {
-  margin-bottom: 20px;
+  margin-bottom: 2vh;
   font-size: 2.5rem;
   color: #0a0a0a;
   opacity: 0;
@@ -24,32 +24,32 @@
 }
 
 .description {
-  margin-bottom: 20px;
+  margin-bottom: 2vh;
   font-size: 1.5rem;
   font-weight: bold;
   color: #0a0a0a;
 }
 
 .textInput {
-  width: 300px;
-  padding: 10px 15px;
-  margin-bottom: 20px;
-  font-size: 1.2rem;
+  width: 30%;
+  padding: 2vh 3vw;
+  margin-bottom: 2vh;
+  font-size: 1.1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .label {
-  margin-right: 10px;
-  margin-bottom: 20px;
+  margin-right: 1vw;
+  margin-bottom: 2vh;
   font-size: 1.2rem;
   font-weight: bold;
   color: #0a0a0a;
 }
 
 .selectBox {
-  padding: 8px 10px;
-  margin-bottom: 20px;
+  padding: 1vh 1vw;
+  margin-bottom: 2vh;
   font-size: 1rem;
   color: #333;
   background-color: white;
@@ -63,7 +63,7 @@
 }
 
 .submitButton {
-  padding: 10px 20px;
+  padding: 1vh 2vw;
   font-size: 1.2rem;
   color: 333;
   cursor: pointer;
@@ -80,7 +80,7 @@
 
 .loadingText {
   display: flex;
-  margin-top: 20px;
+  margin-top: 2vh;
   font-size: 1.5rem;
   color: #4a4a4a;
 }
@@ -98,7 +98,7 @@
 
 .colors {
   display: flex;
-  margin-top: 20px;
+  margin-top: 2vh;
   border: 1px solid #ccc;
 }
 
@@ -108,8 +108,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  width: 100px;
-  height: 200px;
+  width: 8vw;
+  height: 16vw;
 }
 
 .colorCode {
