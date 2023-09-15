@@ -16,10 +16,9 @@ const Loading: React.FC = () => {
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className={styles.slide}
+          className={styles[`slide${index + 1}` as keyof typeof styles]}
           style={{
-            left: `${16.66 * index}%`,
-            animationDelay: `${0.8 + 0.2 * index}s`,
+            animationDelay: `${0.2 * index}s`,
           }}
         />
       ))}
