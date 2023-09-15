@@ -9,10 +9,10 @@
 /* leftsidebar */
 
 .leftsidebar {
-  position: absolute;
+  position: relative;
   left: 5%;
   width: 22%;
-  height: 125vh;
+  height: auto;
   margin-top: 5%;
   background-color: #f8f8f8;
   border: 1px solid #eee;
@@ -104,6 +104,7 @@
   position: absolute;
   right: 10%;
   padding: 10px 20px;
+  margin-top: 20px;
   font-size: 1rem;
   color: #fff;
   cursor: pointer;
