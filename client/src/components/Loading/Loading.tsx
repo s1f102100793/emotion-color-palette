@@ -5,20 +5,24 @@ const Loading: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.blackSreen}>
-        {words.map((word, index) => (
-          <div key={index} className={styles.letter} style={{ animationDelay: `${0.5 * index}s` }}>
-            {word}
-          </div>
-        ))}
-      </div>
+      {words.map((word, index) => (
+        <div
+          key={index}
+          className={styles.letter}
+          style={{
+            top: `calc(50% + ${index * 2.5}rem - ${(words.length * 2.5) / 2}rem)`, // 2.5remは行の高さとしています。適宜調整してください。
+          }}
+        >
+          {word}
+        </div>
+      ))}
 
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className={styles[`slide${index + 1}` as keyof typeof styles]}
+          className={styles.mask}
           style={{
-            animationDelay: `${0.2 * index}s`,
+            animationDelay: `${3 + 0.2 * index}s`,
           }}
         />
       ))}
