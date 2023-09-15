@@ -33,8 +33,39 @@ const Home = () => {
     }
   }, [loading, setChars, loadingText]);
 
+  // const [pageHeight, setPageHeight] = useState(window.innerHeight);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setPageHeight(window.innerHeight);
+  //   };
+
+  //   window.addEventListener('resize', handleResize);
+
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
+
+  // const fallTime = pageHeight / 600;
+
+  // const droplets = Array.from({ length: 10 }).map((_, index) => (
+  //   <div
+  //     key={index}
+  //     className={styles.droplet}
+  //     style={{
+  //       left: `${Math.random() * 100}vw`,
+  //       animationDuration: `${fallTime}s`,
+  //       width: `${5 + Math.random() * 10}px`,
+  //       height: `${5 + Math.random() * 10}px`,
+  //       animationDelay: `${Math.random() * 5}s`,
+  //     }}
+  //   />
+  // ));
+
   return (
     <>
+      {/* {droplets} */}
       <Helmet>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
