@@ -1,182 +1,61 @@
+/* Loading.module.css */
 .container {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: black;
-  animation: reveal-slice 6s forwards;
-}
-
-/* @keyframes reveal-slice {
-  0% {
-    clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
-  }
-
-  16.66% {
-    clip-path: polygon(0% 0%, 16.66% 0%, 16.66% 100%, 0% 100%);
-  }
-
-  33.33% {
-    clip-path: polygon(0% 0%, 33.33% 0%, 33.33% 100%, 0% 100%);
-  }
-
-  50% {
-    clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
-  }
-
-  66.66% {
-    clip-path: polygon(0% 0%, 66.66% 0%, 66.66% 100%, 0% 100%);
-  }
-
-  83.33% {
-    clip-path: polygon(0% 0%, 83.33% 0%, 83.33% 100%, 0% 100%);
-  }
-
-  100% {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  }
-} */
-
-.blackSreen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-  padding-left: 10%;
-
-  /* background: black; */
+  overflow: hidden;
 }
 
 .letter {
-  font-size: 3rem;
-  color: white;
-  opacity: 0;
-  animation: fade-in 4s forwards;
-}
-
-@keyframes fade-in {
-  to {
-    opacity: 1;
-  }
-}
-
-.slide {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 16.66%;
-  background: black;
-  animation-delay: 0.2s;
+  left: 50%;
+  z-index: 1;
+  max-width: 100%;
+  font-size: 2rem;
+  color: white;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: fade-in 1s forwards;
 }
 
 @keyframes fade-in {
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-right {
   0% {
-    left: 0;
+    opacity: 0;
   }
 
   100% {
-    left: 100%;
+    opacity: 1;
   }
 }
 
-.slide1 {
-  animation: hide-slice1 1s forwards;
+.mask {
+  width: 100%;
+  height: calc(16.66% + 5px);
+  background-color: black;
+  border: 10px solid black;
+  animation: reveal 2s forwards;
+  will-change: clip-path;
 }
 
-.slide2 {
-  animation: hide-slice2 1s forwards;
+.container,
+.letter,
+.mask {
+  box-sizing: border-box;
 }
 
-.slide3 {
-  animation: hide-slice3 1s forwards;
-}
-
-.slide4 {
-  animation: hide-slice4 1s forwards;
-}
-
-.slide5 {
-  animation: hide-slice5 1s forwards;
-}
-
-.slide6 {
-  animation: hide-slice6 1s forwards;
-}
-
-@keyframes hide-slice1 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+@keyframes reveal {
+  0% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   }
 
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-}
-
-@keyframes hide-slice2 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%);
-  }
-}
-
-@keyframes hide-slice3 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
-  }
-
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-}
-
-@keyframes hide-slice4 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%);
-  }
-}
-
-@keyframes hide-slice5 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
-  }
-
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-}
-
-@keyframes hide-slice6 {
-  from {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 16.66%, 0% 16.66%);
-  }
-
-  to {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%);
+  100% {
+    clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
   }
 }
