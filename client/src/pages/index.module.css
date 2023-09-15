@@ -6,6 +6,11 @@
   height: 100vh;
   font-family: Lato, 'Noto Sans JP', sans-serif;
   background-color: white;
+
+  /* background-image: url('../assets/iine.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 75%; */
 }
 
 .title {

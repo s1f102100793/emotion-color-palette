@@ -23,7 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
-    const animationDuration = 5500;
+    const animationDuration = 6500;
     setTimeout(() => {
       setLoading(false);
     }, animationDuration);
