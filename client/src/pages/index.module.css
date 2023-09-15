@@ -33,10 +33,19 @@
 .textInput {
   width: 30%;
   padding: 2vh 3vw;
+  padding: 10px;
   margin-bottom: 2vh;
   font-size: 1.1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+  transition: all 0.3s ease-out;
+}
+
+.textInput:hover,
+.textInput:focus {
+  border-color: #0a0a0a;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 20%);
+  transform: scale(1.05);
 }
 
 .label {
