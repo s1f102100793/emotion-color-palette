@@ -29,7 +29,7 @@ const PaletteListPage = () => {
   } = usePaletteList();
 
   useEffect(() => {
-    fetchPalettes(rangesToSendcolorKey, 'number');
+    fetchPalettes(rangesToSendcolorKey, 'number', [4, 5, 6]);
   }, [fetchPalettes, rangesToSendcolorKey]);
 
   useEffect(() => {

@@ -12,8 +12,8 @@ export const getItems = async (
   numberlist: number[],
   colorlist: HSVRange[]
 ): Promise<ReturnColorModel[]> => {
+  console.log(colorlist);
   try {
-    console.log(colorlist);
     switch (type) {
       case 'number':
         if (Array.isArray(numberlist)) {
@@ -104,9 +104,9 @@ export const getItemsFromNumber = async (paletteSize: number) => {
 
   return prismaColor.map((colorItem) => {
     const parsedColors = JSON.parse(colorItem.color as string) as HSVModel[];
-    console.log('Before:', parsedColors);
+    // console.log('Before:', parsedColors);
     const hexColors = parsedColors.map(hsvToHex);
-    console.log('After:', hexColors);
+    // console.log('After:', hexColors);
     return {
       ...colorItem,
       color: hexColors,
@@ -127,17 +127,18 @@ const isColorInRangeHSV = (color: HSVModel, range: HSVRange): boolean => {
 };
 
 export const getItemsFromColor = async (ranges: HSVRange[]) => {
-  console.log('aaaaa');
-  console.log('ranges:', ranges);
+  console.log('Ranges:', ranges);
   const allColors = await prismaClient.color.findMany({
     select: { id: true, createdAt: true, text: true, paletteSize: true, color: true, like: true },
   });
+  console.log('All Colors:', allColors);
 
   const result = allColors.filter((item) => {
     const parsedColors: HSVModel[] =
       typeof item.color === 'string' ? JSON.parse(item.color) : item.color;
     return parsedColors.some((color) => ranges.some((range) => isColorInRangeHSV(color, range)));
   });
+  console.log('Result:', result);
 
   return result.map((colorItem) => {
     const parsedColors: HSVModel[] =

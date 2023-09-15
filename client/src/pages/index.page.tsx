@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useHome } from 'src/hooks/useHome';
 import { pagesPath } from 'src/utils/$path';
@@ -33,8 +33,118 @@ const Home = () => {
     }
   }, [loading, setChars, loadingText]);
 
+  // const [pageHeight, setPageHeight] = useState(window.innerHeight);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setPageHeight(window.innerHeight);
+  //   };
+
+  //   window.addEventListener('resize', handleResize);
+
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
+
+  // const fallTime = pageHeight / 600;
+
+  // const droplets = Array.from({ length: 10 }).map((_, index) => (
+  //   <div
+  //     key={index}
+  //     className={styles.droplet}
+  //     style={{
+  //       left: `${Math.random() * 100}vw`,
+  //       animationDuration: `${fallTime}s`,
+  //       width: `${5 + Math.random() * 10}px`,
+  //       height: `${5 + Math.random() * 10}px`,
+  //       animationDelay: `${Math.random() * 5}s`,
+  //     }}
+  //   />
+  // ));
+
+  interface PaintSplashProps {
+    left: number;
+    top: number;
+    duration: number;
+    delay: number;
+    color: string;
+    style?: React.CSSProperties;
+  }
+
+  interface MainPaintSplashProps {
+    style: React.CSSProperties;
+    color: string;
+  }
+
+  const generateRandomColor = () => {
+    return `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.7)`;
+  };
+
+  const MainPaintSplash: React.FC<MainPaintSplashProps> = (props) => {
+    return (
+      <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg" style={props.style}>
+        <path d="M 10 10 L 90 10 L 50 90 Z" fill={props.color} />
+      </svg>
+    );
+  };
+
+  const PaintSplash: React.FC<PaintSplashProps> = ({ left, top, duration, delay, color }) => {
+    return (
+      <svg
+        className="paint-splash"
+        style={{
+          left: `${left}%`,
+          top: `${top}%`,
+          animationDuration: `${duration}s`,
+          animationDelay: `${delay}s`,
+          fill: color,
+        }}
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="50" cy="50" r="40" />
+      </svg>
+    );
+  };
+
+  const [mainSplashColor, setMainSplashColor] = useState<string>(generateRandomColor());
+  const [splashes, setSplashes] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    const mainSplash = (
+      <MainPaintSplash
+        key="main"
+        style={{
+          left: '50%',
+          top: '50%',
+          animationDuration: '2s',
+          animationDelay: '0s',
+        }}
+        color={mainSplashColor}
+      />
+    );
+
+    const generatedSplashes = [
+      mainSplash,
+      ...Array.from({ length: 10 }).map((_, index) => (
+        <PaintSplash
+          key={index}
+          left={Math.random() * 100}
+          top={Math.random() * 100}
+          duration={0.5 + Math.random()}
+          delay={Math.random()}
+          color={mainSplashColor}
+        />
+      )),
+    ];
+
+    setSplashes(generatedSplashes);
+  }, [mainSplashColor]);
   return (
     <>
+      {/* {droplets} */}
+
       <Helmet>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -45,6 +155,7 @@ const Home = () => {
       </Helmet>
 
       <div className={styles.container}>
+        {splashes}
         <h1 className={styles.title}>感情カラーパレット</h1>
         <p className={styles.description}>あなたの感情を色で表現しよう。</p>
         <input

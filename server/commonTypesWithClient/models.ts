@@ -125,5 +125,5 @@ export type HSVRange = {
 };
 
 export type ColorRanges = {
-  [key in ColorKey]: HSVRange;
+  [color: string]: HSVRange | HSVRange[];
 };
