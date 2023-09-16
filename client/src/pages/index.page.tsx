@@ -18,6 +18,7 @@ const Home = () => {
     setChars,
     handleInputChange,
     handleChange,
+    makeloading,
     handleSubmit,
   } = useHome();
 
@@ -30,8 +31,8 @@ const Home = () => {
   }, [setLoading]);
 
   useEffect(() => {
-    console.log(loading);
-    if (loading) {
+    console.log(makeloading);
+    if (makeloading) {
       const currentChars: string[] = [];
       for (let i = 0; i < loadingText.length; i++) {
         setTimeout(() => {
@@ -42,7 +43,7 @@ const Home = () => {
     } else {
       setChars([]);
     }
-  }, [loading, setChars, loadingText]);
+  }, [makeloading, setChars, loadingText]);
 
   return (
     <>
@@ -85,7 +86,7 @@ const Home = () => {
             <button onClick={handleSubmit} className={styles.submitButton}>
               送信
             </button>
-            {loading ? (
+            {makeloading ? (
               <div className={styles.loadingText}>
                 {chars.map((char, index) => (
                   <span

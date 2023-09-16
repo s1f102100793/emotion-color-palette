@@ -21,21 +21,25 @@ export const useHome = () => {
     console.log('選択された値:', event.target.value);
   };
 
+  const [makeloading, setMakeLoading] = useState(false);
+
   const handleSubmit = async () => {
     setColors([]);
-    setLoading(true);
+    setMakeLoading(true);
+    console.log(makeloading);
     console.log(inputValue);
     const res = await apiClient.color.$post({ body: { text: inputValue, number: selectedValue } });
     console.log(res);
     if (res !== null && res !== undefined) {
       const colorsArray = Object.values(res);
       setColors(colorsArray);
-      setLoading(false);
+      setMakeLoading(false);
     } else {
       console.error('API response is undefined.');
-      setLoading(false);
+      setMakeLoading(false);
     }
   };
+
   return {
     inputValue,
     setInputValue,
@@ -50,6 +54,7 @@ export const useHome = () => {
     setChars,
     handleInputChange,
     handleChange,
+    makeloading,
     handleSubmit,
   };
 };
